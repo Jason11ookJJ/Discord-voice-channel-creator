@@ -31,6 +31,8 @@ async def on_message(message):
                     await new_channel.set_permissions(role[0], speak = True)
                     await new_channel.set_permissions(message.guild.roles[0], speak = False)
                     await channel.send("created a voice channel for \"" + role_name +"\"")
+                    await message.author.move_to(new_channel)
+                    
                 else:
                     await channel.send("Please ping a role not a person")
 
