@@ -1,6 +1,5 @@
 import discord
 import os
-from dotenv import load_dotenv
 
 client = discord.Client()
 channel_list = []
@@ -39,7 +38,5 @@ async def on_voice_state_update(client, before, after):
     if before.channel is not None:
         if before.channel.id in channel_list:
             await before.channel.delete()
-                
 
-load_dotenv()
 client.run(os.environ['TOKEN'])
