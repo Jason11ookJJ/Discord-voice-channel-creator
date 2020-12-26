@@ -1,7 +1,6 @@
 import discord
 import os
 from dotenv import load_dotenv
-from discord.ext.commands import Bot 
 
 client = discord.Client()
 channel_list = []
