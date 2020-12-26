@@ -1,6 +1,5 @@
 import discord
 import os
-from discord import member
 from dotenv import load_dotenv
 from discord.ext.commands import Bot 
 
@@ -44,4 +43,4 @@ async def on_voice_state_update(client, before, after):
                 
 
 load_dotenv()
-client.run(os.getenv('TOKEN'))
+client.run(os.environ['TOKEN'])
