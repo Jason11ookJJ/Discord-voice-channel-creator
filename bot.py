@@ -38,7 +38,8 @@ async def help(ctx):
     channel = ctx.channel
     embedVar = discord.Embed(title="How to use?", description="", color=0x00ff00)
     embedVar.add_field(name="Voice channel", value="create <role>\ncreate a voice channel that only <role> can speak", inline=False)
-    embedVar.add_field(name="Common", value="help\nShows this message")
+    embedVar.add_field(name="Common", value="help\nShows this message", inline=False)
+    embedVar.add_field(name="Project Source code", value="https://github.com/Jason11ookJJ/Discord-voice-channel-creator", inline=False)
     await channel.send(embed=embedVar)
             
 @bot.event
