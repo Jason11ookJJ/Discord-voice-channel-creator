@@ -1,10 +1,16 @@
 from discord.ext import commands
 import discord
 import os
+import sqlite3
 
 bot = commands.Bot(command_prefix='vc ', description='A voice channel bot created by Jason11ookJJ#3151')
 bot.remove_command('help')
 channel_list = []
+
+conn = sqlite3.connect('data.db')
+db = conn.cursor()
+db.execute('''CREATE TABLE IF NOT EXISTS channel(id BIGINT)''')
+
 
 @bot.event
 async def on_ready():
@@ -26,7 +32,9 @@ async def create(ctx, role):
             for i in msg.role_mentions:
                 channel_name = channel_name + " " + i.name
             new_channel = await msg.channel.category.create_voice_channel(channel_name)
-            channel_list.append(new_channel.id)
+            db.execute("INSERT INTO channel (id) VALUES (?)", new_channel.id)
+            db.commit()
+
             for i in msg.role_mentions:
                 await new_channel.set_permissions(i, speak = True)
             await new_channel.set_permissions(ctx.guild.roles[0], speak = False)
@@ -45,7 +53,9 @@ async def help(ctx):
 @bot.event
 async def on_voice_state_update(client, before, after):
     if before.channel is not None:
+        channel_list = db.execute("SELECT * FROM channel")
         if before.channel.id in channel_list:
             await before.channel.delete()
+            db.execute("DELETE FROM channel WHERE id = (?)", before.channel.id)
 
 bot.run(os.environ['TOKEN'])
