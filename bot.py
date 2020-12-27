@@ -40,6 +40,7 @@ async def help(ctx):
     embedVar.add_field(name="Voice channel", value="create <role>\ncreate a voice channel that only <role> can speak", inline=False)
     embedVar.add_field(name="Common", value="help\nShows this message", inline=False)
     embedVar.add_field(name="Project Source code", value="https://github.com/Jason11ookJJ/Discord-voice-channel-creator", inline=False)
+    embedVar.add_field(name="Creator of this bot", value="Jason11ookJJ#3151", inline=False)
     await channel.send(embed=embedVar)
             
 @bot.event
