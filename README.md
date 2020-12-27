@@ -6,4 +6,4 @@ To create a voice chat channel type "vc create @role"
 Only role is accepted not @person
 
 # Command 
-vc create @role
+vc create <role>
