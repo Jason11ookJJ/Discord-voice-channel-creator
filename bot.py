@@ -45,9 +45,10 @@ async def help(ctx):
             
 @bot.event
 async def on_voice_state_update(client, before, after):
-    if before.channel.id in channel_list:
-        if before.channel.members == []:
-            await before.channel.delete()
-            channel_list.remove(before.channel.id)
+    if before.channel is not None:
+        if before.channel.id in channel_list:
+            if before.channel.members == []:
+                await before.channel.delete()
+                channel_list.remove(before.channel.id)
 
 bot.run(os.environ['TOKEN'])
