@@ -23,10 +23,10 @@ async def on_ready():
 
 @bot.command()
 async def create(ctx, role):
-    if role == None:
+    msg = ctx.message
+    if msg.role_mentions == []:
         await ctx.send("Usage: vc create @role")
     else:
-        msg = ctx.message
         channel_name = ""
         if msg.role_mentions != []:
             for i in msg.role_mentions:
@@ -52,6 +52,7 @@ async def help(ctx):
     embedVar.add_field(name="Voice channel", value="create <role>\ncreate a voice channel that only <role> can speak", inline=False)
     embedVar.add_field(name="Common", value="help\nShows this message", inline=False)
     embedVar.add_field(name="Project Source code", value="https://github.com/Jason11ookJJ/Discord-voice-channel-creator", inline=False)
+    embedVar.add_field(name="Creator of this bot", value="Jason11ookJJ#3151", inline=False)
     await channel.send(embed=embedVar)
             
 @bot.event
@@ -59,7 +60,9 @@ async def on_voice_state_update(client, before, after):
     if before.channel is not None:
         channel_list = db.execute("SELECT id FROM channel").fetchall()
         if before.channel.id in channel_list:
-            await before.channel.delete()
-            db.execute("DELETE FROM channel WHERE id = (?)", before.channel.id)
+            if before.channel.members == []:
+                await before.channel.delete()
+                db.execute("DELETE FROM channel WHERE id = (?)", before.channel.id)
+
 
 bot.run(os.environ['TOKEN'])
