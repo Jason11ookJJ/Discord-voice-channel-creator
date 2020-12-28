@@ -17,10 +17,10 @@ async def on_ready():
 
 @bot.command()
 async def create(ctx, role):
-    if role == None:
+    msg = ctx.message
+    if msg.role_mentions == []:
         await ctx.send("Usage: vc create @role")
     else:
-        msg = ctx.message
         channel_name = ""
         if msg.role_mentions != []:
             for i in msg.role_mentions:
@@ -45,8 +45,9 @@ async def help(ctx):
             
 @bot.event
 async def on_voice_state_update(client, before, after):
-    if before.channel is not None:
-        if before.channel.id in channel_list:
+    if before.channel.id in channel_list:
+        if before.channel.members == []:
             await before.channel.delete()
+            channel_list.remove(before.channel.id)
 
 bot.run(os.environ['TOKEN'])
