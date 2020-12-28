@@ -32,9 +32,7 @@ async def create(ctx, role):
             for i in msg.role_mentions:
                 channel_name = channel_name + " " + i.name
             new_channel = await msg.channel.category.create_voice_channel(channel_name)
-            cmd = "INSERT INTO channel VALUES (?)"
-            val = [new_channel.id]
-            db.execute(cmd, val)    
+            db.execute("INSERT INTO channel VALUES (?)", [new_channel.id])    
             conn.commit()
 
             for i in msg.role_mentions:
@@ -50,19 +48,25 @@ async def help(ctx):
     channel = ctx.channel
     embedVar = discord.Embed(title="How to use?", description="", color=0x00ff00)
     embedVar.add_field(name="Voice channel", value="create <role>\ncreate a voice channel that only <role> can speak", inline=False)
-    embedVar.add_field(name="Common", value="help\nShows this message", inline=False)
+    embedVar.add_field(name="Common", value="help\nShows this message\n\nchange_log\nGet the bot change log", inline=False)
     embedVar.add_field(name="Project Source code", value="https://github.com/Jason11ookJJ/Discord-voice-channel-creator", inline=False)
     embedVar.add_field(name="Creator of this bot", value="Jason11ookJJ#3151", inline=False)
     await channel.send(embed=embedVar)
-            
+
+@bot.command(pass_context=True)    
+async def change_log(ctx):
+    channel = ctx.channel
+    embedVar = discord.Embed(title="Change Log", description="", color=0x0ae0fc)
+    embedVar.add_field(name="Pre release 0.1.2", value="Solve temp channel will not be closed after restart", inline=False)
+    await channel.send(embed=embedVar)
+
 @bot.event
 async def on_voice_state_update(client, before, after):
     if before.channel is not None:
-        channel_list = db.execute("SELECT id FROM channel").fetchall()
+        channel_list = list(sum(db.execute("SELECT id FROM channel").fetchall(), ()))
         if before.channel.id in channel_list:
             if before.channel.members == []:
                 await before.channel.delete()
-                db.execute("DELETE FROM channel WHERE id = (?)", before.channel.id)
-
+                db.execute("DELETE FROM channel WHERE id = (?)", [before.channel.id])
 
 bot.run(os.environ['TOKEN'])

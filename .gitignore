@@ -2,3 +2,4 @@
 /.vscode
 /bot-env
 /data.db
+/data.db-journal
