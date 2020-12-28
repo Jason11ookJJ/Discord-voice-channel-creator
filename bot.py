@@ -9,7 +9,7 @@ channel_list = []
 
 conn = sqlite3.connect('data.db')
 db = conn.cursor()
-db.execute('''CREATE TABLE IF NOT EXISTS channel(id BIGINT)''')
+db.execute('''CREATE TABLE IF NOT EXISTS channel(id String)''')
 
 
 @bot.event
@@ -32,14 +32,18 @@ async def create(ctx, role):
             for i in msg.role_mentions:
                 channel_name = channel_name + " " + i.name
             new_channel = await msg.channel.category.create_voice_channel(channel_name)
-            db.execute("INSERT INTO channel (id) VALUES (?)", new_channel.id)
-            db.commit()
+            cmd = "INSERT INTO channel VALUES (?)"
+            val = [new_channel.id]
+            db.execute(cmd, val)    
+            conn.commit()
 
             for i in msg.role_mentions:
                 await new_channel.set_permissions(i, speak = True)
             await new_channel.set_permissions(ctx.guild.roles[0], speak = False)
             await msg.channel.send("created a voice channel for \"" + channel_name +"\"")
             await ctx.author.move_to(new_channel)
+        else:
+            await ctx.send("Usage: vc create @role")
     
 @bot.command(pass_context=True)    
 async def help(ctx):
@@ -53,7 +57,7 @@ async def help(ctx):
 @bot.event
 async def on_voice_state_update(client, before, after):
     if before.channel is not None:
-        channel_list = db.execute("SELECT * FROM channel")
+        channel_list = db.execute("SELECT id FROM channel").fetchall()
         if before.channel.id in channel_list:
             await before.channel.delete()
             db.execute("DELETE FROM channel WHERE id = (?)", before.channel.id)
