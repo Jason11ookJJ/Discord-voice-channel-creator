@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 bot = commands.Bot(command_prefix='vc ', 
                     description='A voice channel bot created by Jason11ookJJ#3151', 
                     help_command=commands.DefaultHelpCommand(no_category = 'help'))
-load_dotenv()
-bot.owner_id = int(os.getenv("OWNER"))
+
+bot.owner_id = int(os.environ["OWNER"])
 
 @bot.event
 async def on_ready():
