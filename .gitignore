@@ -3,3 +3,4 @@
 /bot-env
 /data.db
 /data.db-journal
+/cogs/__pycache__
