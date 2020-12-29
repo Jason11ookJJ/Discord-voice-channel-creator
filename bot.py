@@ -2,9 +2,12 @@ import discord
 import os
 from discord.ext import commands
 
+intents = discord.Intents.default()
+intents.members = True
 bot = commands.Bot(command_prefix='vc ', 
                     description='A voice channel bot created by Jason11ookJJ#3151', 
-                    help_command=commands.DefaultHelpCommand(no_category = 'help'))
+                    help_command=commands.DefaultHelpCommand(no_category = 'help'),
+                    intents=intents)
 
 bot.owner_id = int(os.environ["OWNER"])
 

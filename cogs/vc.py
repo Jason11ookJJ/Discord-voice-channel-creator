@@ -22,7 +22,7 @@ class vc(commands.Cog, name = "Voice Channel"):
             await ctx.send("Usage: vc create @role")
         else:
             channel_name = ""
-            if msg.role_mentions != []:
+            if check_in_role(msg.author.id, msg.role_mentions):
                 for i in msg.role_mentions:
                     channel_name = channel_name + " " + i.name
                 new_channel = await msg.channel.category.create_voice_channel(channel_name)
@@ -35,7 +35,7 @@ class vc(commands.Cog, name = "Voice Channel"):
                 await msg.channel.send("created a voice channel for \"" + channel_name +"\"")
                 await ctx.author.move_to(new_channel)
             else:
-                await ctx.send("Usage: vc create @role")
+                await ctx.send("You are not in that role, @ a role that you are in")
                 
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
@@ -48,3 +48,14 @@ class vc(commands.Cog, name = "Voice Channel"):
 
 def setup(bot):
     bot.add_cog(vc(bot))
+
+def check_in_role(id, role):
+    role_member = []
+    for i in role:
+        for q in i.members:
+            role_member.append(q.id)
+
+        if id not in role_member:
+            return False
+    
+    return True
