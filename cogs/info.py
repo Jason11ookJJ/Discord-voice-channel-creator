@@ -10,20 +10,7 @@ class info(commands.Cog):
     async def on_ready(self):
         print("Info cog is ready")
 
-    # Commands
-    '''
-    @commands.command(pass_content=True)
-    async def help(self, ctx):
-        channel = ctx.channel
-        embedVar = discord.Embed(title="How to use?", description="", color=0x00ff00)
-        embedVar.add_field(name="Voice channel", value="create <role>\ncreate a voice channel that only <role> can speak", inline=False)
-        embedVar.add_field(name="Common", value="help\nShows this message\n\nchange_log\nGet the bot change log", inline=False)
-        embedVar.add_field(name="Project Source code", value="https://github.com/Jason11ookJJ/Discord-voice-channel-creator", inline=False)
-        embedVar.add_field(name="Creator of this bot", value="Jason11ookJJ#3151", inline=False)
-        await channel.send(embed=embedVar)
-    '''
-
-    @commands.command()    
+    @commands.command(brief='Shows change log', description='Shows current version and change log')    
     async def change_log(self, ctx):
         channel = ctx.channel
         embedVar = discord.Embed(title="Change Log", description="", color=0x0ae0fc)

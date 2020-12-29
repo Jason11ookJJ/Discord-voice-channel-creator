@@ -3,9 +3,11 @@ import os
 from discord.ext import commands
 from dotenv import load_dotenv
 
-bot = commands.Bot(command_prefix='vc ', description='A voice channel bot created by Jason11ookJJ#3151')
+bot = commands.Bot(command_prefix='vc ', 
+                    description='A voice channel bot created by Jason11ookJJ#3151', 
+                    help_command=commands.DefaultHelpCommand(no_category = 'help'))
 load_dotenv()
-bot.owner_id = os.getenv("OWNER")
+bot.owner_id = int(os.getenv("OWNER"))
 
 @bot.event
 async def on_ready():
@@ -14,23 +16,6 @@ async def on_ready():
     print(bot.user.id)
     print('------')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="vc help"))
-
-@bot.command()
-@commands.is_owner()
-async def load(ctx, extension):
-    bot.load_extension(f'cogs.{extension}')
-    await ctx.channel.send(f"{extension} loaded")
-
-@bot.command()
-@commands.is_owner()
-async def unload(ctx, extension):
-    bot.unload_extension(f'cogs.{extension}')
-
-@bot.command()
-@commands.is_owner()
-async def reload(ctx, extension):
-    bot.unload_extension(f'cogs.{extension}')
-    bot.load_extension(f'cogs.{extension}')
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):

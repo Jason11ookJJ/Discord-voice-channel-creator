@@ -5,7 +5,7 @@ conn = sqlite3.connect('data.db')
 db = conn.cursor()
 db.execute('''CREATE TABLE IF NOT EXISTS channel(id String)''')
 
-class vc(commands.Cog, name = "VoiceChannel"):
+class vc(commands.Cog, name = "Voice Channel"):
     def __init__(self, bot):
         self.bot = bot
     
@@ -15,8 +15,8 @@ class vc(commands.Cog, name = "VoiceChannel"):
         print("Voice Channel cog is ready")
 
     # Commands
-    @commands.command()
-    async def create(self, ctx):
+    @commands.command(brief='Create a voice channel', description='Create a voice channel that only certain role can speak')
+    async def create(self, ctx, role):
         msg = ctx.message
         if msg.role_mentions == []:
             await ctx.send("Usage: vc create @role")
