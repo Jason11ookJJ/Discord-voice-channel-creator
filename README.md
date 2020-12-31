@@ -1,9 +1,8 @@
 # Discord-voice-channel-creator
-A discord bot that will create a voice channel with role and only user in role can speak
+A discord bot that will create a voice channel 
 
-# How to use?
-To create a voice chat channel type "vc create @role"
-Only role is accepted not @person
+# Feature
+1. Ceate channel that only "@" member can speak
 
 # Command 
-vc create <role>
+vc create <role>/<people>/<text>
