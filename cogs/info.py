@@ -14,7 +14,14 @@ class info(commands.Cog):
     async def change_log(self, ctx):
         channel = ctx.channel
         embedVar = discord.Embed(title="Change Log", description="", color=0x0ae0fc)
-        embedVar.add_field(name="Pre release 0.1.3", value="Only role member can create role channel", inline=False)
+        embedVar.add_field(name="Pre release v0.1.4", value='''
+                Added feature:
+                1. Now user can @people @role and also give custom name to channel
+                2. create temperory channel without @people pr @role
+
+                New command: 
+                vc create @people/@role/text''',
+                inline=False)
         await channel.send(embed=embedVar)
 
 def setup(bot):
