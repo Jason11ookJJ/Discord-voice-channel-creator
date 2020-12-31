@@ -10,13 +10,6 @@ class owner(commands.Cog):
     async def on_ready(self):
         print("Owner cog is ready")
 
-    @commands.command(brief='Load extension', description='Load extension')
-    @commands.is_owner()
-    async def load(self, ctx, extension):
-        self.bot.load_extension(f'cogs.{extension}')
-        await ctx.author.send(f"{extension} loaded")
-        print(f"Extension: {extension} loaded")
-
     @commands.command(brief='Unload extension', description='Unload extension')
     @commands.is_owner()
     async def unload(self, ctx, extension):

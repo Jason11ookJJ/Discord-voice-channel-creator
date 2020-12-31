@@ -13,11 +13,19 @@ bot.owner_id = int(os.environ["OWNER"])
 
 @bot.event
 async def on_ready():
+    print('------')
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('------')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="vc help"))
+
+@bot.command(brief='Load extension', description='Load extension')
+@commands.is_owner()
+async def load(ctx, extension):
+    bot.load_extension(f'cogs.{extension}')
+    await ctx.author.send(f"{extension} loaded")
+    print(f"Extension: {extension} loaded")
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
