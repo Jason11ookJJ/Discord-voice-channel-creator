@@ -24,7 +24,7 @@ class owner(commands.Cog):
         self.bot.unload_extension(f'cogs.{extension}')
         self.bot.load_extension(f'cogs.{extension}')
         await ctx.author.send(f"{extension} reloaded")
-        print(f"Extension: {extension} unreloaded")
+        print(f"Extension: {extension} reloaded")
 
     @commands.command()
     @commands.is_owner()
