@@ -5,4 +5,4 @@ A discord bot that will create a voice channel
 1. Ceate channel that only "@" member can speak
 
 # Command 
-vc create <role>/<people>/<text>
+vc create "@"role/"@"people/text
