@@ -45,6 +45,13 @@ class vc(commands.Cog, name = "Voice Channel"):
                 if before.channel.members == []:
                     await before.channel.delete()
                     db.execute("DELETE FROM channel WHERE id = (?)", [before.channel.id])
+    
+    @commands.command()
+    @commands.is_owner()
+    async def shutdown(self, ctx):
+        db.close()
+        conn.close()
+        await self.bot.logout()
 
 def setup(bot):
     bot.add_cog(vc(bot))
