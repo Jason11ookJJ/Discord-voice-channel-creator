@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 
@@ -24,6 +25,17 @@ class owner(commands.Cog):
         self.bot.load_extension(f'cogs.{extension}')
         await ctx.author.send(f"{extension} reloaded")
         print(f"Extension: {extension} unreloaded")
+
+    @commands.command()
+    @commands.is_owner()
+    async def resetDB(self, ctx):
+        try:
+            os.remove("data.db")
+            os.remove("data.db-journal")
+        except:
+            print("DB reset fail")
+        self.bot.unload_extension('cogs.vc')
+        self.bot.load_extension('cogs.vc')
 
 def setup(bot):
     bot.add_cog(owner(bot))
