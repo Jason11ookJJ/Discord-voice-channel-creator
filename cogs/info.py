@@ -17,7 +17,7 @@ class info(commands.Cog):
         embedVar.add_field(name="Pre release v0.1.4", value='''
                 Added feature:
                 1. Now user can @people @role and also give custom name to channel
-                2. create temperory channel without @people pr @role
+                2. create temporary channel without @people or @role
 
                 New command: 
                 vc create @people/@role/text''',
