@@ -1,5 +1,5 @@
 /.env
-/.vscode
+/.vscode/settings.json
 /bot-env
 /data.db
 /data.db-journal
