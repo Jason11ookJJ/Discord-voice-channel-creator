@@ -1,6 +1,6 @@
 # Discord-voice-channel-creator
 
-A discord bot that will create a voice channel 
+A discord bot that will create a voice channel
 
 ## Feature
 
