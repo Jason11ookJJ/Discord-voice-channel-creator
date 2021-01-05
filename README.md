@@ -1,11 +1,19 @@
 # Discord-voice-channel-creator
 
-A discord bot that will create a voice channel
+A discord bot that will create a temperory voice channel
 
 ## Feature
 
-1. Ceate channel that only "@" member can speak
+1. Create a temperory channel
+2. @role/@people to only allow them to speak in that voice channel
 
 ## Command
 
-vc create "@"role/"@"people/text
+### Voice Channel
+
+vc create @role/@people/text
+
+### info
+
+vc change_log
+vc help
