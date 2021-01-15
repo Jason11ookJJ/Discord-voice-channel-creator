@@ -28,14 +28,9 @@ class owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def resetDB(self, ctx):
-        try:
-            os.remove("data.db")
-            os.remove("data.db-journal")
-        except:
-            print("DB reset fail")
-        self.bot.unload_extension('cogs.vc')
-        self.bot.load_extension('cogs.vc')
+    async def get_server_count(self, ctx):
+       await ctx.send(f"{len(self.bot.guilds)} server are using this bot")
+        
 
 def setup(bot):
     bot.add_cog(owner(bot))
