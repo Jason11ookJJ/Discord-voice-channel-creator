@@ -1,7 +1,6 @@
 import sqlite3
 from discord.errors import HTTPException
 from discord.ext import commands
-from discord.ext.commands.errors import CommandInvokeError
 
 conn = sqlite3.connect('data.db')
 db = conn.cursor()
@@ -28,7 +27,7 @@ class vc(commands.Cog, name = "Voice Channel"):
             if check_in_role(msg.author.id, msg.role_mentions):
                 for i in mention:
                     channel_name = channel_name + " " + i.name
-                q = msg.clean_content.split(" ")
+                q = msg.content.split(" ")
                 for i in range(2, len(q)):
                     if "@" not in q[i]:
                         channel_name = channel_name + " " + q[i]
