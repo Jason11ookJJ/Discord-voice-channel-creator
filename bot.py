@@ -25,6 +25,7 @@ async def on_ready():
 async def load(ctx, extension):
     bot.load_extension(f'cogs.{extension}')
     await ctx.author.send(f"{extension} loaded")
+    await ctx.message.delete()
     print(f"Extension: {extension} loaded")
 
 for filename in os.listdir('./cogs'):

@@ -14,6 +14,7 @@ class owner(commands.Cog):
     async def unload(self, ctx, extension):
         self.bot.unload_extension(f'cogs.{extension}')
         await ctx.author.send(f"{extension} unloaded")
+        await ctx.message.delete()
         print(f"Extension: {extension} unloaded")
 
     @commands.command(brief='Reload extension', description='Reload extension')
@@ -22,6 +23,7 @@ class owner(commands.Cog):
         self.bot.unload_extension(f'cogs.{extension}')
         self.bot.load_extension(f'cogs.{extension}')
         await ctx.author.send(f"{extension} reloaded")
+        await ctx.message.delete()
         print(f"Extension: {extension} reloaded")
 
     @commands.command()
