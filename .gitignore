@@ -4,3 +4,5 @@
 /data.db
 /data.db-journal
 /cogs/__pycache__
+/docker
+/icon
