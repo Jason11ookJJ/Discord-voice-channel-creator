@@ -1,4 +1,6 @@
+import discord
 from discord.ext import commands
+from .vc import db
 
 class owner(commands.Cog):
     def __init__(self, bot):
@@ -28,8 +30,19 @@ class owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def get_server_count(self, ctx):
-       await ctx.send(f"{len(self.bot.guilds)} server are using this bot")
+    async def stats(self, ctx):
+        result = db.execute('''SELECT SUM(vc_created), SUM(vc_deleted) FROM full_statistic''').fetchall()
+        created = result[0][0]
+        deleted = result[0][1]
+        embedVar = discord.Embed(title="Stats", description="", color=0x27AE60)
+        embedVar.add_field(name="Server", value=f'''
+                Server using this bot: {len(self.bot.guilds)}''', inline=False)
+
+        embedVar.add_field(name="Voice channel", value=f'''
+                Voice channel created: {created}        
+                Voice channel deleted: {deleted}''', inline=False)
+        await ctx.author.send(embed=embedVar)
+        await ctx.message.delete()
         
 
 def setup(bot):

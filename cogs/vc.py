@@ -1,17 +1,29 @@
+from datetime import datetime, time
 import sqlite3
 from discord.errors import HTTPException
-from discord.ext import commands
+from discord.ext import commands, tasks
 import discord
 import re
+
+from discord.ext.commands.cog import Cog
 
 conn = sqlite3.connect('data.db')
 db = conn.cursor()
 db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, respone_msg_id int)''')
+db.execute('''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, vc_created int, vc_deleted int)''')
+conn.commit()
 
 class vc(commands.Cog, name = "Voice Channel"):
     def __init__(self, bot):
+        global created, deleted
+        created = 0
+        deleted = 0
+        vc.update_stats.start(self)
         self.bot = bot
     
+    def cog_unload(self):
+        vc.update_stats.cancel()
+
     # enent
     @commands.Cog.listener()
     async def on_ready(self):
@@ -22,6 +34,7 @@ class vc(commands.Cog, name = "Voice Channel"):
                       description='Create a voice channel that only certain role can speak')
     
     async def create(self, ctx):
+        global created, deleted
         msg = ctx.message
         channel_name = ""
         mention = msg.role_mentions + msg.mentions
@@ -71,9 +84,13 @@ class vc(commands.Cog, name = "Voice Channel"):
             await ctx.author.move_to(new_channel)
         except HTTPException: # User not connect to voice
             pass
+
+        created += 1
+        print(f"{current_time()} VC: a channel is created (created: {created}, deleted: {deleted})")
    
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
+        global created, deleted
         if before.channel is not None:
             channel_list = list(sum(db.execute("SELECT channel_id FROM vc_channel").fetchall(), ()))
             if before.channel.id in channel_list:
@@ -91,10 +108,25 @@ class vc(commands.Cog, name = "Voice Channel"):
 
                     db.execute("DELETE FROM vc_channel WHERE channel_id = (?)", [before.channel.id])
                     conn.commit()
+                    
+                    deleted += 1
+                    print(f"{current_time()} VC: a channel is deleted (created: {created}, deleted: {deleted})")
 
-def setup(bot):
-    bot.add_cog(vc(bot))
+    @tasks.loop(minutes=5.00)
+    async def update_stats(self):
+        save(self)
 
+
+
+def save(self):
+    global created, deleted
+    server_count = len(self.bot.guilds)
+    db.execute('''INSERT INTO full_statistic(server_in_use, vc_created, vc_deleted) VALUES(?, ?, ?)''', (server_count, created, deleted))
+    conn.commit()
+    print(f'''{current_time()} DB: saved to data.db (server count:{server_count} created: {created}, deleted: {deleted})''')
+    created = 0
+    deleted = 0
+    
 def check_in_role(id, role):
     role_member = []
     for i in role:
@@ -105,3 +137,9 @@ def check_in_role(id, role):
             return False
     
     return True
+
+def current_time():
+    return datetime.now().strftime("%d/%m/%y %H:%M:%S")
+
+def setup(bot):
+    bot.add_cog(vc(bot))
