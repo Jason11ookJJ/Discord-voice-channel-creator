@@ -42,6 +42,7 @@ class owner(commands.Cog):
         embedVar.add_field(name="Voice channel", value=f'''
                 Voice channel created: {created}        
                 Voice channel deleted: {deleted}''', inline=False)
+        await ctx.channel.send(embed = embedVar)
         await ctx.author.send(embed=embedVar)
         await ctx.message.delete()
         
