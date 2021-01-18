@@ -3,4 +3,8 @@
 /bot-env
 /data.db
 /data.db-journal
-/cogs/__pycache__
+/package/cogs/__pycache__
+/docker
+/icon
+/discord.log
+/data/__pycache__
