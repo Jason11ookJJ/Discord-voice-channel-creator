@@ -11,4 +11,4 @@ RUN apk update && apk add python3-dev \
                         libc-dev
 RUN pip3 install -r requirements.txt
 
-CMD python bot.py
+CMD python bot.py -m
