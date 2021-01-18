@@ -1,3 +1,9 @@
+<a href="https://top.gg/bot/791601658651213824">
+    <img src="https://top.gg/api/widget/791601658651213824.svg" alt="Voice channel creator" />
+</a>
+<a href="https://top.gg/bot/791601658651213824">
+    <img src="https://top.gg/api/widget/791601658651213824.svg" alt="Voice channel creator" />
+</a>
 # Discord-voice-channel-creator
 
 A discord bot that will create a temperory voice channel
