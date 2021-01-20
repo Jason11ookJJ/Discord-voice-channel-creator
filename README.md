@@ -1,3 +1,6 @@
+[![Discord Bots](https://top.gg/api/widget/status/791601658651213824.svg)](https://top.gg/bot/791601658651213824)
+[![Discord Bots](https://top.gg/api/widget/owner/791601658651213824.svg)](https://top.gg/bot/791601658651213824)
+
 # Discord-voice-channel-creator
 
 A discord bot that will create a temperory voice channel
@@ -11,11 +14,11 @@ A discord bot that will create a temperory voice channel
 
 ### Voice Channel
 
-vc create "@"role/"@"people/text
+vc create [@role/@people/text]
 
 ### info
 
-vc change_log
+vc change_log [version number]
 
 vc help
 
@@ -44,7 +47,3 @@ vc load {extension}
 vc unload {extension}
 
 vc reload {extension}
-
-#### Other
-
-vc shutdown
