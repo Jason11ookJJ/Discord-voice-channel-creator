@@ -7,4 +7,5 @@
 /docker
 /icon
 /discord.log
-/data/__pycache__
+/package/data/__pycache__
+/package/__pycache__
