@@ -1,3 +1,4 @@
+from traceback import print_stack
 import discord
 from discord.ext import commands
 from ..function import current_time
@@ -16,20 +17,27 @@ class owner(commands.Cog):
     @commands.command(brief='Unload extension', description='Unload extension')
     @commands.is_owner()
     async def unload(self, ctx, extension):
-        self.bot.unload_extension(f'package.cogs.{extension}')
-        await ctx.author.send(f"{extension} unloaded")
-        await ctx.message.delete()
-        print(f"Extension: {extension} unloaded")
-
+        try:
+            self.bot.unload_extension(f'package.cogs.{extension}')
+            await ctx.author.send(f"{extension} unloaded")
+            print(f"Extension: {extension} unloaded")
+        except Exception as e:
+            print(f"{current_time()} Extension: unload - {e}")
+            await ctx.message.add_reaction("🛑")
+        
     @commands.command(brief='Reload extension', description='Reload extension')
     @commands.is_owner()
     async def reload(self, ctx, extension):
-        self.bot.unload_extension(f'package.cogs.{extension}')
-        self.bot.load_extension(f'package.cogs.{extension}')
-        importlib.reload(db)
-        await ctx.author.send(f"{extension} reloaded")
-        await ctx.message.delete()
-        print(f"Extension: {extension} reloaded")
+        try:
+            self.bot.unload_extension(f'package.cogs.{extension}')
+            self.bot.load_extension(f'package.cogs.{extension}')
+            importlib.reload(db)
+            await ctx.author.send(f"{extension} reloaded")
+            print(f"Extension: {extension} reloaded")
+        except Exception as e:
+            print(f"{current_time()} Extension: reload - {e}")
+            await ctx.message.add_reaction("🛑")
+        
 
     @commands.command()
     @commands.is_owner()
@@ -45,13 +53,11 @@ class owner(commands.Cog):
                 Voice channel created: {created}        
                 Voice channel deleted: {deleted}''', inline=False)
         await ctx.channel.send(embed = embedVar)
-        await ctx.message.delete()
     
     @commands.command()
     @commands.is_owner()
-    async def resetDB(self, ctx):
-        db.delete_all()
-        await ctx.message.delete()
+    async def resetdb(self, ctx):
+        db.resetDB()
         print(f"{current_time()} DB: Reset Database (by {ctx.author.name})")
         
 

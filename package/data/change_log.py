@@ -1,4 +1,11 @@
 change_log = {
+    "0.1.7": """
+    Bug fix:
+    The bot will catch error and report error to user now
+
+    New command:
+    vc permission (show permission need)
+    """,
     "0.1.6": """
     Added feature:
     ✨ Your server will become prettier, all message from the bot is now embedded.

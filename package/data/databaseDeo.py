@@ -1,5 +1,6 @@
 import sqlite3
 from ..function import current_time
+import os
 
 
 def connect():
@@ -7,6 +8,7 @@ def connect():
     db = conn.cursor()
     db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, respone_msg_id int)''')
     db.execute('''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, vc_created int, vc_deleted int)''')
+    db.execute('''CREATE TABLE IF NOT EXISTS error(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, author String, msg String, error String)''')
     conn.commit()
     return conn
 
@@ -63,14 +65,20 @@ def get_all_stats():
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
 
-def delete_all():
+def resetDB():
+    for file in os.listdir():
+        if file == "data.db":
+            os.mkdir("backup")
+            os.replace(file, f"""backup/{current_time()}.db""")
+            statsSave()
+            return
+    
+def save_error(ctx, error):
     try:
-        conn = sqlite3.connect('data.db')
+        conn = connect()
         db = conn.cursor()
-        db.execute('''DELETE FROM vc_channel''')
-        db.execute('''DELETE FROM full_statistic''')
+        db.execute('''INSERT INTO error(author, msg, error) VALUES(?, ?, ?)''', (ctx.author.display_name+" #"+ctx.author.discriminator, ctx.message.clean_content, error.args[0]))
         conn.commit()
         conn.close()
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
-    

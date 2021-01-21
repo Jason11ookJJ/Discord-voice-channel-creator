@@ -1,3 +1,4 @@
+from package.function import current_time
 import discord
 import os
 from discord.ext import commands
@@ -32,11 +33,14 @@ async def on_ready():
 @bot.command(brief='Load extension', description='Load extension')
 @commands.is_owner()
 async def load(ctx, extension):
-    bot.load_extension(f'package.cogs.{extension}')
-    importlib.reload(db)
-    await ctx.author.send(f"{extension} loaded")
-    await ctx.message.delete()
-    print(f"Extension: {extension} loaded")
+    try:
+        bot.load_extension(f'package.cogs.{extension}')
+        importlib.reload(db)
+        await ctx.author.send(f"{extension} loaded")
+        print(f"Extension: {extension} loaded")
+    except Exception as e:
+        print(f"{current_time()} Extension: load - {e}")
+        await ctx.message.add_reaction("🛑")
 
 for filename in os.listdir('./package/cogs'):
     if filename.endswith('.py'):
