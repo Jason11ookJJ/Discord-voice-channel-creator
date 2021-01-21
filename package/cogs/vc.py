@@ -95,7 +95,7 @@ class vc(commands.Cog, name = "Voice Channel"):
                         embedVar = discord.Embed(title="", description=f"""
                         (deleted) {description} 
                         Ended: {current_time()}
-                        """, color=0x0ae0fc)
+                        """, color=0x4F4F4F)
                         await response_msg.edit(embed=embedVar)
 
                     db.deleteChannel(before.channel.id)
