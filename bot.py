@@ -2,6 +2,8 @@ import discord
 import os
 from discord.ext import commands
 import logging
+from package.data import databaseDeo as db
+import importlib
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -31,6 +33,7 @@ async def on_ready():
 @commands.is_owner()
 async def load(ctx, extension):
     bot.load_extension(f'package.cogs.{extension}')
+    importlib.reload(db)
     await ctx.author.send(f"{extension} loaded")
     await ctx.message.delete()
     print(f"Extension: {extension} loaded")

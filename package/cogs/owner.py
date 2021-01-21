@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands
-from .vc import db
-
+from ..function import current_time
+from ..data import databaseDeo as db
+import importlib
 
 class owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    # enent
+    # event
     @commands.Cog.listener()
     async def on_ready(self):
         print("Owner cog is ready")
@@ -25,6 +26,7 @@ class owner(commands.Cog):
     async def reload(self, ctx, extension):
         self.bot.unload_extension(f'package.cogs.{extension}')
         self.bot.load_extension(f'package.cogs.{extension}')
+        importlib.reload(db)
         await ctx.author.send(f"{extension} reloaded")
         await ctx.message.delete()
         print(f"Extension: {extension} reloaded")
@@ -32,10 +34,10 @@ class owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def stats(self, ctx):
-        result = db.execute('''SELECT SUM(vc_created), SUM(vc_deleted) FROM full_statistic''').fetchall()
+        result = db.get_all_stats()
         created = result[0][0]
         deleted = result[0][1]
-        embedVar = discord.Embed(title="Stats", description="", color=0x27AE60)
+        embedVar = discord.Embed(title="Stats", description=f"Result generated: {current_time()}", color=0x27AE60)
         embedVar.add_field(name="Server", value=f'''
                 Server using this bot: {len(self.bot.guilds)}''', inline=False)
 
@@ -43,8 +45,14 @@ class owner(commands.Cog):
                 Voice channel created: {created}        
                 Voice channel deleted: {deleted}''', inline=False)
         await ctx.channel.send(embed = embedVar)
-        await ctx.author.send(embed=embedVar)
         await ctx.message.delete()
+    
+    @commands.command()
+    @commands.is_owner()
+    async def resetDB(self, ctx):
+        db.delete_all()
+        await ctx.message.delete()
+        print(f"{current_time()} DB: Reset Database (by {ctx.author.name})")
         
 
 def setup(bot):

@@ -1,15 +1,13 @@
 import discord
 from discord.ext import commands
-import json
+from ..data.change_log import change_log
 
-with open('package/data/change_log.json') as f:
-    data = json.load(f)
 
 class info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    # enent
+    # event
     @commands.Cog.listener()
     async def on_ready(self):
         print("Info cog is ready")
@@ -21,7 +19,7 @@ class info(commands.Cog):
         version = "0.1.6"
         if len(msg) > 2:
             version = msg[2]
-        description = data.get(version)
+        description = change_log.get(version)
         if description != None:
             embedVar = discord.Embed(title="Change Log", description="", color=0x0ae0fc)
             embedVar.add_field(name= "v" + version, value=description,
@@ -30,7 +28,7 @@ class info(commands.Cog):
         else:
             embedVar =  discord.Embed(title="", description=f"""
                     {ctx.author.mention}
-                    Incorrect version nummber.
+                    Incorrect version number.
                     Usage: vc change_log [version_number]
                     """, color=0xff0f0f)
             await channel.send(embed = embedVar)
