@@ -68,7 +68,8 @@ def get_all_stats():
 def resetDB():
     for file in os.listdir():
         if file == "data.db":
-            os.mkdir("backup")
+            if not os.path.exists('backup'):
+                os.makedirs('backup')
             os.replace(file, f"""backup/{current_time()}.db""")
             statsSave()
             return
