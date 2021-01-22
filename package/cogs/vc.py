@@ -24,8 +24,7 @@ class vc(commands.Cog, name = "Voice Channel"):
     manage_channels =True, 
     send_messages = True, 
     view_channel = True, 
-    embed_links = True, 
-    connect = True)
+    embed_links = True)
     async def create(self, ctx):
         msg = ctx.message
         channel_name = ""
@@ -109,7 +108,9 @@ class vc(commands.Cog, name = "Voice Channel"):
     async def on_command_error(self, ctx, error):
         if isinstance(error, BotMissingPermissions): # checking which type of error it is
             embedVar = discord.Embed(title="Sorry, an error occurred", description=f"""
-                    It seems that I don't have enough permission to do this, please sent a message to the admin to fix this problem. Enter "vc permission" to check for the permission that I need.
+                    {error}
+                    It seems that I don't have enough permission to do this, please sent a message to the admin to fix this problem. 
+                    Enter "vc permission" to check for the permission that I need.
                     """, color=0xff0f0f)
             await ctx.send(embed=embedVar)
         elif isinstance(error, CommandNotFound):

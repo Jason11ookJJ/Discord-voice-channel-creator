@@ -46,7 +46,6 @@ class info(commands.Cog):
         - embed links
         - read message history
         - add reactions
-        - connect
         - move member
         """)
         await ctx.send(embed = embedVar)
