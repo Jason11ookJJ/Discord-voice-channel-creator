@@ -123,8 +123,8 @@ class vc(commands.Cog, name = "Voice Channel"):
                     An unexpected error occurred, please report this issue on [GitHub](https://github.com/Jason11ookJJ/Discord-voice-channel-creator/issues)
                     OR DM {self.bot.get_user(self.bot.owner_id)} for help
                     """, color= 0xff0f0f)
-            db.save_error(ctx, error)
             await ctx.send(embed=embedVar)
+        db.save_error(ctx, error)
         await ctx.message.add_reaction("🛑")
         
 
