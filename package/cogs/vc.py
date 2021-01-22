@@ -1,16 +1,14 @@
 import re
 import discord
 from discord.errors import HTTPException
-from discord.ext import commands, tasks
+from discord.ext import commands
+from discord.ext.commands.errors import BotMissingPermissions, CommandNotFound
 from ..function import current_time
 from ..data import databaseDeo as db
 
 
 class vc(commands.Cog, name = "Voice Channel"):
     def __init__(self, bot):
-        global created, deleted
-        created = 0
-        deleted = 0
         self.bot = bot
 
     # event
@@ -21,9 +19,14 @@ class vc(commands.Cog, name = "Voice Channel"):
     # Commands
     @commands.command(brief='Create a voice channel',
                       description='Create a voice channel that only certain role can speak')
-    
+    @commands.bot_has_permissions(read_messages = True, 
+    manage_messages = True, 
+    manage_channels =True, 
+    send_messages = True, 
+    view_channel = True, 
+    embed_links = True, 
+    connect = True)
     async def create(self, ctx):
-        global created, deleted
         msg = ctx.message
         channel_name = ""
         mention = msg.role_mentions + msg.mentions
@@ -74,18 +77,15 @@ class vc(commands.Cog, name = "Voice Channel"):
         except HTTPException: # User not connect to voice
             pass
 
-        created += 1
-        print(f"{current_time()} VC: a channel is created (created: {created}, deleted: {deleted})")
-        save(self)
+        print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+        save(self, 1, 0)
    
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
-        global created, deleted
         if before.channel is not None:
             result = db.get_all_channel(before.channel.id)
-            if result != "":
+            if result != []:
                 if before.channel.members == []:
-                    await before.channel.delete()
                     msg_channel = self.bot.get_channel(result[0][1])
                     response_msg = await msg_channel.fetch_message(result[0][2])
                     embeds = response_msg.embeds
@@ -95,23 +95,44 @@ class vc(commands.Cog, name = "Voice Channel"):
                         embedVar = discord.Embed(title="", description=f"""
                         (deleted) {description} 
                         Ended: {current_time()}
-                        """, color=0x0ae0fc)
+                        """, color=0x4F4F4F)
                         await response_msg.edit(embed=embedVar)
+                    
+                    await before.channel.delete()
 
                     db.deleteChannel(before.channel.id)
                     
-                    deleted += 1
-                    print(f"{current_time()} VC: a channel is deleted (created: {created}, deleted: {deleted})")
-                    save(self)
+                    print(f"{current_time()} VC: a channel is deleted (created: 0, deleted: 1)")
+                    save(self, 0, 1)
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, BotMissingPermissions): # checking which type of error it is
+            embedVar = discord.Embed(title="Sorry, an error occurred", description=f"""
+                    It seems that I don't have enough permission to do this, please sent a message to the admin to fix this problem. Enter "vc permission" to check for the permission that I need.
+                    """, color=0xff0f0f)
+            await ctx.send(embed=embedVar)
+        elif isinstance(error, CommandNotFound):
+            embedVar = discord.Embed(title="Sorry, an error occurred", description=f"""
+                    {ctx.message.clean_content.split(" ")[1]} Command not found
+                    """, color=0xff0f0f)
+            await ctx.send(embed=embedVar)
+        else:
+            embedVar = discord.Embed(title="Sorry, an unknown error occurred", description=f"""
+                    An unexpected error occurred, please report this issue on [GitHub](https://github.com/Jason11ookJJ/Discord-voice-channel-creator/issues)
+                    OR DM {self.bot.get_user(self.bot.owner_id)} for help
+                    """, color= 0xff0f0f)
+            db.save_error(ctx, error)
+            await ctx.send(embed=embedVar)
+        await ctx.message.add_reaction("🛑")
+        
 
 
 
-def save(self):
-    global created, deleted
+
+def save(self, created, deleted):
     server_count = len(self.bot.guilds)
     db.statsSave(server_count, created, deleted)
-    created = 0
-    deleted = 0
     
 def check_in_role(id, role):
     role_member = []
