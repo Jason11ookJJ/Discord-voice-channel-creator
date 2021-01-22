@@ -39,11 +39,14 @@ class info(commands.Cog):
                     These are the permission needed to run me properly. Please enable them.
                     """, color=0xF2C94C)
         embedVar.add_field(name = "Lists", value="""
-        1. Manage role 
-        2. Manage channel 
-        3. Send message 
-        4. manage message
-        5. Move member
+        - Manage channels
+        - view channel
+        - send messages
+        - manage messages
+        - embed links
+        - read message history
+        - add reactions
+        - connect
         """)
         await ctx.send(embed = embedVar)
 

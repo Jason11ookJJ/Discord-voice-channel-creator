@@ -2,16 +2,13 @@ import re
 import discord
 from discord.errors import HTTPException
 from discord.ext import commands
-from discord.ext.commands.errors import BotMissingPermissions, CommandNotFound, ExtensionAlreadyLoaded, ExtensionFailed, ExtensionNotFound, ExtensionNotLoaded, NoPrivateMessage
+from discord.ext.commands.errors import BotMissingPermissions, CommandNotFound
 from ..function import current_time
 from ..data import databaseDeo as db
 
 
 class vc(commands.Cog, name = "Voice Channel"):
     def __init__(self, bot):
-        global created, deleted
-        created = 0
-        deleted = 0
         self.bot = bot
 
     # event
@@ -22,9 +19,14 @@ class vc(commands.Cog, name = "Voice Channel"):
     # Commands
     @commands.command(brief='Create a voice channel',
                       description='Create a voice channel that only certain role can speak')
-    @commands.bot_has_permissions(read_messages = True, manage_messages = True, manage_channels =True, manage_roles = True)
+    @commands.bot_has_permissions(read_messages = True, 
+    manage_messages = True, 
+    manage_channels =True, 
+    send_messages = True, 
+    view_channel = True, 
+    embed_links = True, 
+    connect = True)
     async def create(self, ctx):
-        global created, deleted
         msg = ctx.message
         channel_name = ""
         mention = msg.role_mentions + msg.mentions
@@ -75,18 +77,15 @@ class vc(commands.Cog, name = "Voice Channel"):
         except HTTPException: # User not connect to voice
             pass
 
-        created += 1
-        print(f"{current_time()} VC: a channel is created (created: {created}, deleted: {deleted})")
-        save(self)
+        print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+        save(self, 1, 0)
    
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
-        global created, deleted
         if before.channel is not None:
             result = db.get_all_channel(before.channel.id)
             if result != []:
                 if before.channel.members == []:
-                    await before.channel.delete()
                     msg_channel = self.bot.get_channel(result[0][1])
                     response_msg = await msg_channel.fetch_message(result[0][2])
                     embeds = response_msg.embeds
@@ -98,12 +97,13 @@ class vc(commands.Cog, name = "Voice Channel"):
                         Ended: {current_time()}
                         """, color=0x4F4F4F)
                         await response_msg.edit(embed=embedVar)
+                    
+                    await before.channel.delete()
 
                     db.deleteChannel(before.channel.id)
                     
-                    deleted += 1
-                    print(f"{current_time()} VC: a channel is deleted (created: {created}, deleted: {deleted})")
-                    save(self)
+                    print(f"{current_time()} VC: a channel is deleted (created: 0, deleted: 1)")
+                    save(self, 0, 1)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -130,12 +130,9 @@ class vc(commands.Cog, name = "Voice Channel"):
 
 
 
-def save(self):
-    global created, deleted
+def save(self, created, deleted):
     server_count = len(self.bot.guilds)
     db.statsSave(server_count, created, deleted)
-    created = 0
-    deleted = 0
     
 def check_in_role(id, role):
     role_member = []
