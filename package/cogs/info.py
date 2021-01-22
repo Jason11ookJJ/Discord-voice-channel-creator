@@ -16,7 +16,7 @@ class info(commands.Cog):
     async def change_log(self, ctx):
         channel = ctx.channel
         msg = ctx.message.clean_content.split(" ")
-        version = "0.1.7"
+        version = "0.1.7.1"
         if len(msg) > 2:
             version = msg[2]
         description = change_log.get(version)
