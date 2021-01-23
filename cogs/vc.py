@@ -3,8 +3,8 @@ import discord
 from discord.errors import HTTPException
 from discord.ext import commands
 from discord.ext.commands.errors import BotMissingPermissions, CommandNotFound
-from ..function import current_time
-from ..data import databaseDeo as db
+from function import current_time
+from data import databaseDeo as db
 
 
 class Vc(commands.Cog, name="Voice Channel"):

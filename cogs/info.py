@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from ..data.change_log import change_log
+from data.change_log import change_log
 
 
 class Info(commands.Cog):

@@ -1,12 +1,9 @@
 /.env
-/.vscode/settings.json
+/.vscode
 /bot-env
 /data.db
 /data.db-journal
-/package/cogs/__pycache__
 /docker
 /icon
 /discord.log
-/package/data/__pycache__
-/package/__pycache__
 /backup

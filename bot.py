@@ -1,9 +1,9 @@
-from package.function import current_time
+from function import current_time
 import discord
 import os
 from discord.ext import commands
 import logging
-from package.data import databaseDeo as db
+from data import databaseDeo as db
 import importlib
 from dotenv import load_dotenv
 
@@ -41,7 +41,7 @@ async def on_ready():
 @commands.is_owner()
 async def load(ctx, extension):
     try:
-        bot.load_extension(f'package.cogs.{extension}')
+        bot.load_extension(f'cogs.{extension}')
         importlib.reload(db)
         await ctx.message.add_reaction("✅")
         print(f"Extension: {extension} loaded")
@@ -50,8 +50,8 @@ async def load(ctx, extension):
         await ctx.message.add_reaction("🛑")
 
 
-for filename in os.listdir('./package/cogs'):
+for filename in os.listdir('cogs'):
     if filename.endswith('.py'):
-        bot.load_extension(f'package.cogs.{filename[:-3]}')
+        bot.load_extension(f'cogs.{filename[:-3]}')
 
 bot.run(os.environ['TOKEN'])

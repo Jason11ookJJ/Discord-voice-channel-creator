@@ -1,5 +1,5 @@
 import sqlite3
-from ..function import current_time
+from function import current_time
 import os
 
 
