@@ -6,23 +6,30 @@ import os
 def connect():
     conn = sqlite3.connect('data.db')
     db = conn.cursor()
-    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, respone_msg_id int)''')
-    db.execute('''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, vc_created int, vc_deleted int)''')
-    db.execute('''CREATE TABLE IF NOT EXISTS error(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, author String, msg String, error String)''')
+    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, response_msg_id int)''')
+    db.execute(
+        '''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, 
+        vc_created int, vc_deleted int)''')
+    db.execute(
+        '''CREATE TABLE IF NOT EXISTS error(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, author String, msg String, 
+        error String)''')
     conn.commit()
     return conn
 
-def savechannel(new_channel_id, msg_channel_id, respone_msg_id):
+
+def save_channel(new_channel_id, msg_channel_id, respone_msg_id):
     try:
         conn = connect()
         db = conn.cursor()
-        db.execute("INSERT INTO vc_channel(channel_id, msg_channel, respone_msg_id) VALUES (?, ?, ?)", (new_channel_id, msg_channel_id, respone_msg_id))
+        db.execute("INSERT INTO vc_channel(channel_id, msg_channel, response_msg_id) VALUES (?, ?, ?)",
+                   (new_channel_id, msg_channel_id, respone_msg_id))
         conn.commit()
         conn.close()
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
 
-def deleteChannel(before_channel_id):
+
+def delete_channel(before_channel_id):
     try:
         conn = connect()
         db = conn.cursor()
@@ -32,16 +39,20 @@ def deleteChannel(before_channel_id):
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
 
-def statsSave(server_count, created, deleted):
-    try: 
+
+def stats_save(server_count, created, deleted):
+    try:
         conn = connect()
         db = conn.cursor()
-        db.execute('''INSERT INTO full_statistic(server_in_use, vc_created, vc_deleted) VALUES(?, ?, ?)''', (server_count, created, deleted))
+        db.execute('''INSERT INTO full_statistic(server_in_use, vc_created, vc_deleted) VALUES(?, ?, ?)''',
+                   (server_count, created, deleted))
         conn.commit()
         conn.close()
-        print(f'''{current_time()} DB: saved to data.db (server count:{server_count} created: {created}, deleted: {deleted})''')
+        print(
+            f'''{current_time()} DB: saved to data.db (server count:{server_count} created: {created}, deleted: {deleted})''')
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
+
 
 def get_all_channel(before_channel_id):
     try:
@@ -54,6 +65,7 @@ def get_all_channel(before_channel_id):
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
 
+
 def get_all_stats():
     try:
         conn = connect()
@@ -65,21 +77,36 @@ def get_all_stats():
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')
 
-def resetDB():
+
+def reset_db(self):
     for file in os.listdir():
         if file == "data.db":
             if not os.path.exists('backup'):
                 os.makedirs('backup')
             os.replace(file, f"""backup/{current_time()}.db""")
-            statsSave()
+            stats_save(len(self.bot.guilds), 0, 0)
             return
-    
+
+
 def save_error(ctx, error):
     try:
         conn = connect()
         db = conn.cursor()
-        db.execute('''INSERT INTO error(author, msg, error) VALUES(?, ?, ?)''', (ctx.author.display_name+" #"+ctx.author.discriminator, ctx.message.clean_content, error.args[0]))
+        db.execute('''INSERT INTO error(author, msg, error) VALUES(?, ?, ?)''', (
+            ctx.author.display_name + " #" + ctx.author.discriminator, ctx.message.clean_content, error.args[0]))
         conn.commit()
         conn.close()
+    except Exception as e:
+        print(f'''{current_time()} Error: DB ({e})''')
+
+
+def get_all_error():
+    try:
+        conn = connect()
+        db = conn.cursor()
+        result = db.execute('''SELECT * FROM error''').fetchall()
+        conn.commit()
+        conn.close()
+        return result
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')

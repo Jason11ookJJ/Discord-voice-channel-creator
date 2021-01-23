@@ -5,6 +5,11 @@ from discord.ext import commands
 import logging
 from package.data import databaseDeo as db
 import importlib
+from dotenv import load_dotenv
+
+load_dotenv()
+os.getenv("OWNER")
+os.getenv("TOKEN")
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -14,12 +19,13 @@ logger.addHandler(handler)
 
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix='vc ', 
-                    description='A voice channel bot created by Jason11ookJJ#3151', 
-                    help_command=commands.DefaultHelpCommand(no_category = 'help'),
-                    intents=intents)
+bot = commands.Bot(command_prefix='vc ',
+                   description='A voice channel bot created by Jason11ookJJ#3151',
+                   help_command=commands.DefaultHelpCommand(no_category='help'),
+                   intents=intents)
 
 bot.owner_id = int(os.environ["OWNER"])
+
 
 @bot.event
 async def on_ready():
@@ -30,17 +36,19 @@ async def on_ready():
     print('------')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="vc help"))
 
+
 @bot.command(brief='Load extension', description='Load extension')
 @commands.is_owner()
 async def load(ctx, extension):
     try:
         bot.load_extension(f'package.cogs.{extension}')
         importlib.reload(db)
-        await ctx.author.send(f"{extension} loaded")
+        await ctx.message.add_reaction("✅")
         print(f"Extension: {extension} loaded")
     except Exception as e:
         print(f"{current_time()} Extension: load - {e}")
         await ctx.message.add_reaction("🛑")
+
 
 for filename in os.listdir('./package/cogs'):
     if filename.endswith('.py'):

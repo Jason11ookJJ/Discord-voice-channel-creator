@@ -32,8 +32,8 @@ change_log = {
 
 
     "0.5": """
-    Added feature: 
-    1. the bot will alert the user when a voice channel is deleted""",
+    Added feature: 
+    1. the bot will alert the user when a voice channel is deleted""",
 
 
     "0.4": """

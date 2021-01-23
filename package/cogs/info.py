@@ -3,7 +3,7 @@ from discord.ext import commands
 from ..data.change_log import change_log
 
 
-class info(commands.Cog):
+class Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
@@ -51,4 +51,4 @@ class info(commands.Cog):
         await ctx.send(embed = embedVar)
 
 def setup(bot):
-    bot.add_cog(info(bot))
+    bot.add_cog(Info(bot))
