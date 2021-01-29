@@ -44,14 +44,14 @@ class Owner(commands.Cog):
         result = db.get_all_stats()
         created = result[0][0]
         deleted = result[0][1]
-        embedVar = discord.Embed(title="Stats", description=f"Result generated: {current_time()}", color=0x27AE60)
-        embedVar.add_field(name="Server", value=f'''
+        embed_var = discord.Embed(title="Stats", description=f"Result generated: {current_time()}", color=0x27AE60)
+        embed_var.add_field(name="Server", value=f'''
                 Server using this bot: {len(self.bot.guilds)}''', inline=False)
 
-        embedVar.add_field(name="Voice channel", value=f'''
+        embed_var.add_field(name="Voice channel", value=f'''
                 Voice channel created: {created}        
                 Voice channel deleted: {deleted}''', inline=False)
-        await ctx.channel.send(embed=embedVar)
+        await ctx.channel.send(embed=embed_var)
 
     @commands.command()
     @commands.is_owner()

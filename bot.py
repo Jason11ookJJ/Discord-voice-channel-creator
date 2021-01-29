@@ -5,11 +5,14 @@ from discord.ext import commands
 import logging
 from data import databaseDeo as db
 import importlib
+
 from dotenv import load_dotenv
+
 
 load_dotenv()
 os.getenv("OWNER")
 os.getenv("TOKEN")
+
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)

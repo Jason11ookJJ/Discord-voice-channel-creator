@@ -7,3 +7,8 @@
 /icon
 /discord.log
 /backup
+/__pycache__
+/.idea
+/cogs/__pycache__
+/data/__pycache__
+

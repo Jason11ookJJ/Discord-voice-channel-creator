@@ -39,7 +39,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                 # setting permission
                 for i in mention:
                     await new_channel.set_permissions(i, speak=True)
-                    mention_name.append(i.name)
+                    mention_name.append(i.mention)
                 mention_name = ", ".join(mention_name)
 
                 await new_channel.set_permissions(ctx.guild.roles[0], speak=False)
@@ -84,6 +84,9 @@ class Vc(commands.Cog, name="Voice Channel"):
             result = db.get_all_channel(before.channel.id)
             if result:
                 if not before.channel.members:
+                    await before.channel.delete()
+                    db.delete_channel(before.channel.id)
+
                     msg_channel = self.bot.get_channel(result[0][1])
                     response_msg = await msg_channel.fetch_message(result[0][2])
                     embeds = response_msg.embeds
@@ -96,10 +99,6 @@ class Vc(commands.Cog, name="Voice Channel"):
                         """, color=0x4F4F4F)
                         await response_msg.edit(embed=embed_var)
 
-                    await before.channel.delete()
-
-                    db.delete_channel(before.channel.id)
-
                     print(f"{current_time()} VC: a channel is deleted (created: 0, deleted: 1)")
                     save(self, 0, 1)
 
@@ -107,10 +106,9 @@ class Vc(commands.Cog, name="Voice Channel"):
     async def on_command_error(self, ctx, error):
         if isinstance(error, BotMissingPermissions):  # checking which type of error it is
             embed_var = discord.Embed(title="Sorry, an error occurred", description=f"""
-                    {error}
-                    It seems that I don't have enough permission to do this, please sent a message to the admin to fix this problem. 
-                    Enter "vc permission" to check for the permission that I need.
-                    """, color=0xff0f0f)
+                    {error} It seems that I don't have enough permission to do this, please sent a message to the 
+                    admin to fix this problem. Enter "vc permission" to check for the permission that I need. """,
+                                      color=0xff0f0f)
             await ctx.send(embed=embed_var)
         elif isinstance(error, CommandNotFound):
             embed_var = discord.Embed(title="Sorry, an error occurred", description=f"""
@@ -118,9 +116,10 @@ class Vc(commands.Cog, name="Voice Channel"):
                     """, color=0xff0f0f)
             await ctx.send(embed=embed_var)
         else:
-            embed_var = discord.Embed(title="Sorry, an unknown error occurred", description=f"""
-                    An unexpected error occurred, please report this issue on [GitHub](https://github.com/Jason11ookJJ/Discord-voice-channel-creator/issues)
-                    OR DM {self.bot.get_user(self.bot.owner_id)} for help
+            embed_var = discord.Embed(title="Sorry, an unknown error occurred", description=f""" An unexpected error 
+            occurred, please report this issue on [GitHub](
+            https://github.com/Jason11ookJJ/Discord-voice-channel-creator/issues) OR DM 
+            {self.bot.get_user(self.bot.owner_id)} for help 
                     """, color=0xff0f0f)
             await ctx.send(embed=embed_var)
         db.save_error(ctx, error)
@@ -132,13 +131,13 @@ def save(self, created, deleted):
     db.stats_save(server_count, created, deleted)
 
 
-def check_in_role(id, role):
+def check_in_role(user_id, role):
     role_member = []
     for i in role:
         for q in i.members:
             role_member.append(q.id)
 
-        if id not in role_member:
+        if user_id not in role_member:
             return False
 
     return True
