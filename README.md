@@ -1,3 +1,4 @@
+[![Discord Bots](https://top.gg/api/widget/status/791601658651213824.svg)](https://top.gg/bot/791601658651213824)
 # Discord-voice-channel-creator
 
 A discord bot that will create a temporary voice channel
