@@ -5,10 +5,11 @@
 A discord bot that will create a temporary voice channel
 
 ## Commands
+All commands are case-insensitive
 
 commands| description
 ---|---
-`vc create[?speaker] [?name]` | create a voice channel that everyone can hear
+`vc create [?speaker] [?name]` | create a voice channel that everyone can hear
 `vc private [?speaker] [?name]` | (coming soon) ~~create a  private voice channel that only speaker can hear~~
 `vc change_log [?version]` | get recent change log
 `vc permission` | get required permission
@@ -20,8 +21,8 @@ arg | Options
 ---|---
 `?` | optional argument
 `speaker` | - @user<br>- @role <br> Defalt speaker: @everyone
-`name` | -channel name <br> Defalt: created by voice channel creator
-`version` | -version number
+`name` | - channel name <br> Defalt: created by voice channel creator
+`version` | - version number
 
 ## Example
 
@@ -32,20 +33,4 @@ vc create @Jason11ookJJ | Channel  name: Jason11ookJJ <br> Speaker: you and Jaso
 vc private @Jason11ookJJ |  Channel name: Jason11ookJJ <br> Speaker: you and Jason11ookJJ <br> Listener: you and Jason11ookJJ
 
 ---
-
-## Hosting
-
-As this bot is open source, you can host and edit this bot by yourself. I added some owner command to let you easier to edit and launch the bot.
-
-Environment variable | data
----|---
-OWNER | owner id
-TOKEN | your bot token
-
-command | use
---- | ---
-`vc load [extension]` | load extension
-`vc unload [extension]` | unload extension
-`vc reload [extension]` | reload extension
-`vc stats` | get bot stats
-`vc resetdb` | reset database
+For more information please join the [support server](https://discord.gg/P5Fd4KXXEJ) or visit bot's [GitHub](https://github.com/Jason11ookJJ/Discord-voice-channel-creator)
