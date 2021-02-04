@@ -27,22 +27,23 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   embed_links=True)
     async def create(self, ctx):
         i = await create_channel(ctx)
-        msg = i.get("msg")
-        new_channel = i.get("new_channel")
-        embed_var = discord.Embed(title="", description=f"""
-                                Vcc common
-                                Name: {i.get("channel_name")}
-                                Speaker: {i.get("mention_name")}
-                                Creator: {msg.author.mention}
+        if i:
+            msg = i.get("msg")
+            new_channel = i.get("new_channel")
+            embed_var = discord.Embed(title="", description=f"""
+                                    Vcc common
+                                    Name: {i.get("channel_name")}
+                                    Speaker: {i.get("mention_name")}
+                                    Creator: {msg.author.mention}
+    
+                                    Started: {current_time()}
+                                    """, color=0x0ae0fc)
+            response_msg = await msg.channel.send(embed=embed_var)
 
-                                Started: {current_time()}
-                                """, color=0x0ae0fc)
-        response_msg = await msg.channel.send(embed=embed_var)
+            db.save_channel(new_channel.id, msg.channel.id, response_msg.id)
 
-        db.save_channel(new_channel.id, msg.channel.id, response_msg.id)
-
-        print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
-        save(self, 1, 0)
+            print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+            save(self, 1, 0)
 
     @commands.command(brief='Create a voice channel',
                       description='Create a voice channel that only certain role can speak')
@@ -57,28 +58,29 @@ class Vc(commands.Cog, name="Voice Channel"):
         mention = msg.role_mentions + msg.mentions
         if mention:
             i = await create_channel(ctx)
-            msg = i.get("msg")
-            new_channel = i.get("new_channel")
+            if i:
+                msg = i.get("msg")
+                new_channel = i.get("new_channel")
 
-            # set permission
-            for q in i.get("mention"):
-                await new_channel.set_permissions(q, connect=True)
-            await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
+                # set permission
+                for q in i.get("mention"):
+                    await new_channel.set_permissions(q, connect=True)
+                await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
 
-            embed_var = discord.Embed(title="", description=f"""
-                                        Vcc private
-                                        Name: {i.get("channel_name")}
-                                        Speaker: {i.get("mention_name")}
-                                        Creator: {msg.author.mention}
-    
-                                        Started: {current_time()}
-                                        """, color=0x178fff)
-            response_msg = await msg.channel.send(embed=embed_var)
+                embed_var = discord.Embed(title="", description=f"""
+                                            Vcc private
+                                            Name: {i.get("channel_name")}
+                                            Speaker: {i.get("mention_name")}
+                                            Creator: {msg.author.mention}
+        
+                                            Started: {current_time()}
+                                            """, color=0x178fff)
+                response_msg = await msg.channel.send(embed=embed_var)
 
-            db.save_channel(new_channel.id, msg.channel.id, response_msg.id)
+                db.save_channel(new_channel.id, msg.channel.id, response_msg.id)
 
-            print(f"{current_time()} VC: a private channel is created (created: 1, deleted: 0)")
-            save(self, 1, 0)
+                print(f"{current_time()} VC: a private channel is created (created: 1, deleted: 0)")
+                save(self, 1, 0)
         else:
             embed_var = discord.Embed(title="", description=f"""
                                     {msg.author.mention}
@@ -110,29 +112,6 @@ class Vc(commands.Cog, name="Voice Channel"):
 
                     print(f"{current_time()} VC: a channel is deleted (created: 0, deleted: 1)")
                     save(self, 0, 1)
-
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        await ctx.message.add_reaction("🛑")
-        if isinstance(error, BotMissingPermissions):  # checking which type of error it is
-            embed_var = discord.Embed(title="Sorry, an error occurred", description=f"""
-                    {error} It seems that I don't have enough permission to do this, please sent a message to the 
-                    admin to fix this problem. Enter "vc permission" to check for the permission that I need. """,
-                                      color=0xff0f0f)
-            await ctx.send(embed=embed_var)
-        elif isinstance(error, CommandNotFound):
-            embed_var = discord.Embed(title="Sorry, an error occurred", description=f"""
-                    {ctx.message.clean_content.split(" ")[1]} Command not found
-                    """, color=0xff0f0f)
-            await ctx.send(embed=embed_var)
-        else:
-            embed_var = discord.Embed(title="Sorry, an unknown error occurred", description=f""" An unexpected error 
-            occurred, please report this issue on [GitHub](
-            https://github.com/Jason11ookJJ/Discord-voice-channel-creator/issues) OR DM 
-            {self.bot.get_user(self.bot.owner_id)} for help 
-                    """, color=0xff0f0f)
-            await ctx.send(embed=embed_var)
-        db.save_error(ctx, error)
 
 
 async def create_channel(ctx):
