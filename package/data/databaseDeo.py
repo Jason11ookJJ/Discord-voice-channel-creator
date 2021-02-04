@@ -6,8 +6,7 @@ import os
 def connect():
     conn = sqlite3.connect('data.db')
     db = conn.cursor()
-    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, response_msg_id int,
-        private int)''')
+    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, response_msg_id int)''')
     db.execute(
         '''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, 
         vc_created int, vc_deleted int)''')
