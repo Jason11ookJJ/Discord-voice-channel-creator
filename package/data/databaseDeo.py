@@ -1,12 +1,13 @@
 import sqlite3
-from function import current_time
+from package.function import current_time
 import os
 
 
 def connect():
     conn = sqlite3.connect('data.db')
     db = conn.cursor()
-    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, response_msg_id int)''')
+    db.execute('''CREATE TABLE IF NOT EXISTS vc_channel(channel_id int, msg_channel int, response_msg_id int,
+        private int)''')
     db.execute(
         '''CREATE TABLE IF NOT EXISTS full_statistic(Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, server_in_use int, 
         vc_created int, vc_deleted int)''')
@@ -17,12 +18,12 @@ def connect():
     return conn
 
 
-def save_channel(new_channel_id, msg_channel_id, respone_msg_id):
+def save_channel(new_channel_id, msg_channel_id, response_msg_id):
     try:
         conn = connect()
         db = conn.cursor()
         db.execute("INSERT INTO vc_channel(channel_id, msg_channel, response_msg_id) VALUES (?, ?, ?)",
-                   (new_channel_id, msg_channel_id, respone_msg_id))
+                   (new_channel_id, msg_channel_id, response_msg_id))
         conn.commit()
         conn.close()
     except Exception as e:

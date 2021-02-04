@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from function import current_time
-from data import databaseDeo as db
+from package.function import current_time
+from package.data import databaseDeo as db
 import importlib
 
 

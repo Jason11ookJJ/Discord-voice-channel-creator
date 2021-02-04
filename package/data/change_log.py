@@ -1,4 +1,10 @@
 change_log = {
+    "0.8": """
+    New feature:
+    - Updated top.gg bot info
+    - New "vc private" command, to create private channel
+    - New "vc text" command, to create a voice channel with a text channel
+    """,
     "0.7.1": """
     Bug fix:
     Fix permission problem (new permission is needed, updated permission list)
