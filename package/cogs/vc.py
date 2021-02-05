@@ -74,7 +74,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                 embed_var = discord.Embed(title="", description=f"""
                                             Vcc private
                                             Name: {i.get("channel_name")}
-                                            Speaker: {i.get("mention_name")}
+                                            Speaker + Listener: {i.get("mention_name")}
                                             Creator: {msg.author.mention}
         
                                             Started: {current_time()}
