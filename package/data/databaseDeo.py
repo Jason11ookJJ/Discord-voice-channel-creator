@@ -24,10 +24,13 @@ def connect():
          vc_deleted int)''')
     db.execute(
         '''CREATE TABLE IF NOT EXISTS error(
+        id INTEGER PRIMARY KEY AUTOINCREMENT , 
         Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, 
         author String, 
-        msg String, 
-        error String)''')
+        command String, 
+        error_messages String,
+        fixed int DEFAULT 0,
+        dev String)''')
     conn.commit()
     return conn
 
@@ -128,7 +131,7 @@ def save_error(ctx, error):
     try:
         conn = connect()
         db = conn.cursor()
-        db.execute('''INSERT INTO error(author, msg, error) VALUES(?, ?, ?)''', (
+        db.execute('''INSERT INTO error(author, command, error_messages) VALUES(?, ?, ?)''', (
             ctx.author.display_name + " #" + ctx.author.discriminator, ctx.message.clean_content, error.args[0]))
         conn.commit()
         conn.close()
@@ -138,11 +141,25 @@ def save_error(ctx, error):
 
 def get_all_error():
     try:
+        data = []
         conn = connect()
         db = conn.cursor()
-        result = db.execute('''SELECT * FROM error''').fetchall()
+        result = db.execute('''SELECT * FROM error WHERE fixed = 0''').fetchall()
         conn.commit()
         conn.close()
-        return result
+        for i in result:
+            data.append(dict(zip([c[0] for c in db.description], i)))
+        return data
+    except Exception as e:
+        print(f'''{current_time()} Error: DB ({e})''')
+
+
+def check_error(ctx, id):
+    try:
+        conn = connect()
+        db = conn.cursor()
+        db.execute('''UPDATE error SET fixed = (1), dev = (?) WHERE id = (?)''', (str(ctx.author), id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         print(f'''{current_time()} Error: DB ({e})''')

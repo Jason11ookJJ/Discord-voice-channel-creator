@@ -63,13 +63,30 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def error(self, ctx):
-        result = db.get_all_error()
-        embed_var = discord.Embed(title="Error", description=f"Result generated: {current_time()}", color=0x27AE60)
-        for i in result:
-            embed_var.add_field(name=i[0], value=f'''
-                    {i[2]}
-                    {i[3]}''', inline=False)
-        await ctx.channel.send(embed=embed_var)
+        try:
+            result = db.get_all_error()
+            embed_var = discord.Embed(title="Error", description=f"Result generated: {current_time()}", color=0x27AE60)
+            for i in result:
+                embed_var.add_field(name=i.get("Timestamp"), value=f'''
+                        Id: #{i.get("id")}
+                        User: {i.get("author")}
+                        Command: {i.get("command")}
+                        Error: {i.get("error_messages")}
+                        ''', inline=False)
+            await ctx.channel.send(embed=embed_var)
+        except Exception as e:
+            print(f"{current_time()} Error: error - {e}")
+            await ctx.message.add_reaction("🛑")
+
+    @commands.command()
+    @commands.is_owner()
+    async def check_error(self, ctx, error_id):
+        try:
+            db.check_error(ctx, error_id)
+            await ctx.message.add_reaction("✅")
+        except Exception as e:
+            print(f"{current_time()} Error: check_error - {e}")
+            await ctx.message.add_reaction("🛑")
 
 
 def setup(bot):
