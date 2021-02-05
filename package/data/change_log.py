@@ -1,9 +1,13 @@
 change_log = {
     "0.8": """
     New feature:
-    - Updated top.gg bot info
-    - New "vc private" command, to create private channel
-    - New "vc text" command, to create a voice channel with a text channel
+    - Updated [top.gg](https://top.gg/bot/791601658651213824) bot info
+    - New "vc private" command, to create private channel with a text channel
+    - New "vc text" command, to create a common voice channel with a text channel
+    
+    New command:
+    `vc private [speaker/listener] [?name]`: create a private voice and text channel, no other user can enter tour channel except admin
+    `vc text [?speaker] [?name]`: create a common voice channel with a text channel
     """,
     "0.7.1": """
     Bug fix:
