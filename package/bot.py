@@ -1,9 +1,9 @@
-from function import current_time
+from package.function import current_time
 import discord
 import os
 from discord.ext import commands
 import logging
-from data import databaseDeo as db
+from package.data import databaseDeo as db
 import importlib
 
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ os.getenv("TOKEN")
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename=f'discord.log', encoding='utf-8', mode='a')
+handler = logging.FileHandler(filename=f'../discord.log', encoding='utf-8', mode='a')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
@@ -54,7 +54,7 @@ async def load(ctx, extension):
 
 
 for filename in os.listdir('cogs'):
-    if filename.endswith('.py'):
+    if filename.endswith('.py') and filename != "__init__.py":
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 bot.run(os.environ['TOKEN'])

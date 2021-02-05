@@ -9,19 +9,20 @@ All commands are case-insensitive
 
 commands| description
 ---|---
-`vc create [?speaker] [?name]` | create a voice channel that everyone can hear
-`vc private [?speaker] [?name]` | (coming soon) ~~create a  private voice channel that only speaker can hear~~
+`vc create [?speakers] [?name]` | create a voice channel that everyone can hear
+`vc private [speaker/listener] [?name]`| create a private voice and text channel, no other user can enter tour channel except admin
+`vc text [?speaker] [?name]`| create a common voice channel with a text channel
 `vc change_log [?version]` | get recent change log
 `vc permission` | get required permission
 `vc help` | get command description
 
-## Arguements
+## Arguments
 
 arg | Options
 ---|---
 `?` | optional argument
-`speaker` | - @user<br>- @role <br> Defalt speaker: @everyone
-`name` | - channel name <br> Defalt: created by voice channel creator
+`speaker` | - @user<br>- @role <br> Default speaker: @everyone
+`name` | - channel name <br> Default: created by voice channel creator
 `version` | - version number
 
 ## Example
