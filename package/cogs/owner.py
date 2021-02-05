@@ -88,6 +88,11 @@ class Owner(commands.Cog):
             print(f"{current_time()} Error: check_error - {e}")
             await ctx.message.add_reaction("🛑")
 
+    @commands.command()
+    @commands.is_owner()
+    async def shutdown(self, ctx):
+        await ctx.bot.logout()
+
 
 def setup(bot):
     bot.add_cog(Owner(bot))
