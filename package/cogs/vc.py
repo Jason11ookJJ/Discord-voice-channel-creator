@@ -58,14 +58,18 @@ class Vc(commands.Cog, name="Voice Channel"):
         mention = msg.role_mentions + msg.mentions
         if mention:
             i = await create_voice(ctx)
-            if i:
+            j = await create_text(ctx)
+            if i and j:
                 msg = i.get("msg")
                 new_channel = i.get("new_channel")
+                text_channel = j.get("new_channel")
 
                 # set permission
                 for q in i.get("mention"):
                     await new_channel.set_permissions(q, connect=True)
+                    await text_channel.set_permissions(q, read_messages=True)
                 await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
+                await text_channel.set_permissions(ctx.guild.roles[0], read_messages=False)
 
                 embed_var = discord.Embed(title="", description=f"""
                                             Vcc private
