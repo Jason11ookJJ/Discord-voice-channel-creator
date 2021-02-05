@@ -176,7 +176,7 @@ async def create_voice(ctx):
             await msg.channel.send(embed=embed_var)
             return
     else:  # only text
-        channel_name = msg.clean_content[10:]
+        channel_name = await get_channel_name(msg)
         if channel_name == "":
             channel_name = "created by Vcc"
         new_channel = await msg.channel.category.create_voice_channel(channel_name)
@@ -214,7 +214,7 @@ async def create_text(ctx):
             await msg.channel.send(embed=embed_var)
             return
     else:  # only text
-        channel_name = msg.clean_content[10:]
+        channel_name = await get_channel_name(msg)
         if channel_name == "":
             channel_name = "created by Vcc"
         new_channel = await msg.channel.category.create_text_channel(channel_name)
