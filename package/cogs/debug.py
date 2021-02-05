@@ -1,8 +1,4 @@
-import discord
 from discord.ext import commands
-from package.function import current_time
-from package.data import databaseDeo as db
-import importlib
 
 
 class Debug(commands.Cog):
@@ -14,7 +10,7 @@ class Debug(commands.Cog):
     async def on_ready(self):
         print("Owner cog is ready")
 
-    @commands.command(brief='Unload extension', description='Unload extension')
+    @commands.command(brief='delete all channel in this category', description='delete all channel in this category')
     @commands.is_owner()
     async def delete_all(self, ctx):
         channel_list = ctx.channel.category.channels
