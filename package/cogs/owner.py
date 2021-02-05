@@ -58,6 +58,7 @@ class Owner(commands.Cog):
     async def resetdb(self, ctx):
         db.reset_db(self)
         print(f"{current_time()} DB: Reset Database (by {ctx.author.name})")
+        await ctx.message.add_reaction("✅")
 
     @commands.command()
     @commands.is_owner()
