@@ -157,7 +157,7 @@ async def create_voice(ctx):
     if mention:  # @role
         if check_in_role(msg.author.id, msg.role_mentions):
             # create channel
-            channel_name = get_channel_name(msg)
+            channel_name = await get_channel_name(msg)
             new_channel = await msg.channel.category.create_voice_channel(channel_name)
 
             # setting permission
@@ -197,7 +197,7 @@ async def create_text(ctx):
     if mention:  # @role
         if check_in_role(msg.author.id, msg.role_mentions):
             # create channel
-            channel_name = get_channel_name(msg)
+            channel_name = await get_channel_name(msg)
             new_channel = await msg.channel.category.create_text_channel(channel_name)
 
             # setting permission
@@ -222,7 +222,7 @@ async def create_text(ctx):
     return {"new_channel": new_channel}
 
 
-def get_channel_name(msg):
+async def get_channel_name(msg):
     channel_name = " ".join(msg.clean_content.split(" ")[2:])
     if len(channel_name) > 100:
         embed_var = discord.Embed(title="", description=f"""
