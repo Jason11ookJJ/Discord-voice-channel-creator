@@ -49,7 +49,7 @@ async def on_ready():
 @commands.is_owner()
 async def load(ctx, extension):
     try:
-        bot.load_extension(f'cogs.{extension}')
+        bot.load_extension(f'package.cogs.{extension}')
         importlib.reload(db)
         await ctx.message.add_reaction("✅")
         print(f"Extension: {extension} loaded")

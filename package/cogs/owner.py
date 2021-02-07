@@ -18,7 +18,7 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def unload(self, ctx, extension):
         try:
-            self.bot.unload_extension(f'cogs.{extension}')
+            self.bot.unload_extension(f'package.cogs.{extension}')
             await ctx.message.add_reaction("✅")
             print(f"Extension: {extension} unloaded")
         except Exception as e:
@@ -29,7 +29,7 @@ class Owner(commands.Cog):
     @commands.is_owner()
     async def reload(self, ctx, extension):
         try:
-            self.bot.unload_extension(f'cogs.{extension}')
+            self.bot.unload_extension(f'package.cogs.{extension}')
             self.bot.load_extension(f'package.cogs.{extension}')
             importlib.reload(db)
             await ctx.message.add_reaction("✅")
