@@ -27,24 +27,24 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def create(self, ctx):
-        i = await create_voice(ctx)
-        if i:
-            msg = i.get("msg")
-            new_channel = i.get("new_channel")
-            embed_var = discord.Embed(title="", description=f"""
-                                    Vcc common
-                                    Name: {i.get("channel_name")}
-                                    Speaker: {i.get("mention_name")}
-                                    Creator: {msg.author.mention}
-    
-                                    Started: {current_time()}
-                                    """, color=0x0ae0fc)
-            response_msg = await msg.channel.send(embed=embed_var)
+        if await check_in_role(ctx) == 0:
+            i = await create_voice(ctx)
+            if i:
+                new_channel = i.get("new_channel")
+                embed_var = discord.Embed(title="", description=f"""
+                                        Vcc common
+                                        Name: {str(new_channel)}
+                                        Speaker: {i.get("mention_name")}
+                                        Creator: {ctx.author.mention}
+        
+                                        Started: {current_time()}
+                                        """, color=0x0ae0fc)
+                response_msg = await ctx.channel.send(embed=embed_var)
 
-            db.save_voice_channel(new_channel.id, msg.channel.id, response_msg.id)
+                db.save_voice_channel(new_channel.id, ctx.channel.id, response_msg.id)
 
-            print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
-            save(self, 1, 0)
+                print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+                save(self, 1, 0)
 
     @commands.command(brief='Create a private voice channel',
                       description='Create a private voice channel that only certain role can speak and hear')
@@ -56,44 +56,42 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def private(self, ctx):
-        msg = ctx.message
-        mention = msg.role_mentions + msg.mentions
-        if mention:
+        check = await check_in_role(ctx)
+        if check == 0:
             i = await create_voice(ctx)
-            j = await create_text(ctx)
-            if i and j:
-                msg = i.get("msg")
-                new_channel = i.get("new_channel")
-                text_channel = j.get("new_channel")
+            if i:
+                j = await create_text(ctx)
+                if j:
+                    new_channel = i.get("new_channel")
+                    text_channel = j.get("new_channel")
 
-                # set permission
-                for q in i.get("mention"):
-                    await new_channel.set_permissions(q, connect=True)
-                    await text_channel.set_permissions(q, read_messages=True)
-                await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
-                await text_channel.set_permissions(ctx.guild.roles[0], read_messages=False)
+                    # set permission
+                    for q in i.get("mention"):
+                        await new_channel.set_permissions(q, connect=True)
+                        await text_channel.set_permissions(q, read_messages=True)
+                    await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
+                    await text_channel.set_permissions(ctx.guild.roles[0], read_messages=False)
 
-                embed_var = discord.Embed(title="", description=f"""
-                                            Vcc private
-                                            Name: {i.get("channel_name")}
-                                            Speaker + Listener: {i.get("mention_name")}
-                                            Creator: {msg.author.mention}
-        
-                                            Started: {current_time()}
-                                            """, color=0x178fff)
-                response_msg = await msg.channel.send(embed=embed_var)
+                    embed_var = discord.Embed(title="", description=f"""
+                                                Vcc private
+                                                Name: {str(new_channel)}
+                                                Speaker + Listener: {i.get("mention_name")}
+                                                Creator: {ctx.author.mention}
+            
+                                                Started: {current_time()}
+                                                """, color=0x178fff)
+                    response_msg = await ctx.channel.send(embed=embed_var)
 
-                db.save_text_channel(new_channel.id, j.get("new_channel").id)
-                db.save_voice_channel(new_channel.id, msg.channel.id, response_msg.id)
-                print(f"{current_time()} VC: a private channel is created (created: 1, deleted: 0)")
-                save(self, 1, 0)
-        else:
+                    db.save_text_channel(new_channel.id, text_channel.id)
+                    db.save_voice_channel(new_channel.id, ctx.channel.id, response_msg.id)
+                    print(f"{current_time()} VC: a private channel is created (created: 1, deleted: 0)")
+                    save(self, 1, 0)
+        elif check == 2:
             embed_var = discord.Embed(title="", description=f"""
-                                    {msg.author.mention}
+                                    {ctx.author.mention}
                                     You need to ping a user to create a private channel, use "vc create" instead
                                     """, color=0xff0f0f)
-            await msg.channel.send(embed=embed_var)
-            return
+            await ctx.channel.send(embed=embed_var)
 
     @commands.command(brief='Create a voice and text channel',
                       description='Create a voice channel that only certain role can speak')
@@ -105,23 +103,25 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def text(self, ctx):
-        i = await create_voice(ctx)
-        q = await create_text(ctx)
-        if i and q:
-            msg = i.get("msg")
-            new_channel = i.get("new_channel")
-            embed_var = discord.Embed(title="", description=f"""Vcc text and voice
-                                                                Name: {i.get("channel_name")}
-                                                                Speaker: {i.get("mention_name")}
-                                                                Creator: {msg.author.mention}
-                                    
-                                                                Started: {current_time()}
-                                                                """, color=0x0ae0fc)
-            response_msg = await msg.channel.send(embed=embed_var)
-            db.save_voice_channel(new_channel.id, msg.channel.id, response_msg.id)
-            db.save_text_channel(new_channel.id, q.get("new_channel").id)
-            print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
-            save(self, 1, 0)
+        check = await check_in_role(ctx)
+        if check == 0:
+            i = await create_voice(ctx)
+            if i:
+                q = await create_text(ctx)
+                if q:
+                    voice_channel = i.get("new_channel")
+                    embed_var = discord.Embed(title="", description=f"""Vcc text and voice
+                                                                        Name: {str(voice_channel)}
+                                                                        Speaker: {i.get("mention_name")}
+                                                                        Creator: {ctx.author.mention}
+                                            
+                                                                        Started: {current_time()}
+                                                                        """, color=0x0ae0fc)
+                    response_msg = await ctx.channel.send(embed=embed_var)
+                    db.save_voice_channel(voice_channel.id, ctx.channel.id, response_msg.id)
+                    db.save_text_channel(voice_channel.id, q.get("new_channel").id)
+                    print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+                    save(self, 1, 0)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
@@ -162,26 +162,17 @@ async def create_voice(ctx):
     mention_list = []
 
     if mention:  # @role
-        if check_in_role(msg.author.id, msg.role_mentions):
-            # create channel
-            channel_name = await get_channel_name(msg)
-            new_channel = await msg.channel.category.create_voice_channel(channel_name)
+        # create channel
+        channel_name = await get_channel_name(msg)
+        new_channel = await msg.channel.category.create_voice_channel(channel_name)
 
-            # setting permission
-            for i in mention:
-                await new_channel.set_permissions(i, speak=True)
-                mention_list.append(i.mention)
-            mention_name = ", ".join(mention_list)
+        # setting permission
+        for i in mention:
+            await new_channel.set_permissions(i, speak=True)
+            mention_list.append(i.mention)
+        mention_name = ", ".join(mention_list)
 
-            await new_channel.set_permissions(ctx.guild.roles[0], speak=False)
-        else:  # not member of @role
-            embed_var = discord.Embed(title="", description=f"""
-                        {msg.author.mention}
-                        You are not a member of that role,
-                        Please ping another role or people
-                        """, color=0xff0f0f)
-            await msg.channel.send(embed=embed_var)
-            return
+        await new_channel.set_permissions(ctx.guild.roles[0], speak=False)
     else:  # only text
         channel_name = await get_channel_name(msg)
         if channel_name == "":
@@ -193,8 +184,7 @@ async def create_voice(ctx):
     if ctx.author.voice:
         await ctx.author.move_to(new_channel)
 
-    return {"msg": msg, "new_channel": new_channel, "mention": mention, "channel_name": channel_name,
-            "mention_name": mention_name}
+    return {"new_channel": new_channel, "mention": mention,"mention_name": mention_name}
 
 
 async def create_text(ctx):
@@ -202,24 +192,15 @@ async def create_text(ctx):
     mention = msg.role_mentions + msg.mentions
 
     if mention:  # @role
-        if check_in_role(msg.author.id, msg.role_mentions):
-            # create channel
-            channel_name = await get_channel_name(msg)
-            new_channel = await msg.channel.category.create_text_channel(channel_name)
+        # create channel
+        channel_name = await get_channel_name(msg)
+        new_channel = await msg.channel.category.create_text_channel(channel_name)
 
-            # setting permission
-            for i in mention:
-                await new_channel.set_permissions(i, send_messages=True)
+        # setting permission
+        for i in mention:
+            await new_channel.set_permissions(i, send_messages=True)
 
-            await new_channel.set_permissions(ctx.guild.roles[0], send_messages=False)
-        else:  # not member of @role
-            embed_var = discord.Embed(title="", description=f"""
-                        {msg.author.mention}
-                        You are not a member of that role,
-                        Please ping another role or people
-                        """, color=0xff0f0f)
-            await msg.channel.send(embed=embed_var)
-            return
+        await new_channel.set_permissions(ctx.guild.roles[0], send_messages=False)
     else:  # only text
         channel_name = await get_channel_name(msg)
         if channel_name == "":
@@ -245,16 +226,27 @@ def save(self, created, deleted):
     db.stats_save(server_count, created, deleted)
 
 
-def check_in_role(user_id, role):
-    role_member = []
-    for i in role:
-        for q in i.members:
-            role_member.append(q.id)
-
-        if user_id not in role_member:
-            return False
-
-    return True
+async def check_in_role(ctx):
+    """
+    return
+    0: in all role
+    1: not in some role
+    2: no mention
+    """
+    mention = ctx.message.role_mentions
+    author_role = ctx.author.roles
+    if not mention:
+        return 2
+    for i in mention:
+        if i not in author_role:
+            embed_var = discord.Embed(title="", description=f"""
+                                    {ctx.author.mention}
+                                    You are not a member of that role,
+                                    Please ping another role or people
+                                    """, color=0xff0f0f)
+            await ctx.channel.send(embed=embed_var)
+            return 1
+    return 0
 
 
 def setup(bot):
