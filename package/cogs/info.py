@@ -40,6 +40,7 @@ class Info(commands.Cog):
                     """, color=0xF2C94C)
         embedVar.add_field(name="Lists", value="""
         - manage channels
+        - manage roles
         - view channel
         - send messages
         - manage messages
