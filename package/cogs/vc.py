@@ -1,8 +1,5 @@
-import re
 import discord
-from discord.errors import HTTPException
 from discord.ext import commands
-from discord.ext.commands.errors import BotMissingPermissions, CommandNotFound
 from package.function import current_time
 from package.data import databaseDeo as db
 
@@ -27,7 +24,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def create(self, ctx):
-        if await check_in_role(ctx) == 0:
+        if await check_in_role(ctx) == 0 or 2:
             i = await create_voice(ctx)
             if i:
                 new_channel = i.get("new_channel")
@@ -88,9 +85,9 @@ class Vc(commands.Cog, name="Voice Channel"):
                     save(self, 1, 0)
         elif check == 2:
             embed_var = discord.Embed(title="", description=f"""
-                                    {ctx.author.mention}
-                                    You need to ping a user to create a private channel, use "vc create" instead
-                                    """, color=0xff0f0f)
+                                                {ctx.author.mention}
+                                                You need to ping a user to create a private channel, use "vc create" instead
+                                                """, color=0xff0f0f)
             await ctx.channel.send(embed=embed_var)
 
     @commands.command(brief='Create a voice and text channel',
@@ -104,7 +101,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   embed_links=True)
     async def text(self, ctx):
         check = await check_in_role(ctx)
-        if check == 0:
+        if check == 0 or 2:
             i = await create_voice(ctx)
             if i:
                 q = await create_text(ctx)
@@ -184,7 +181,7 @@ async def create_voice(ctx):
     if ctx.author.voice:
         await ctx.author.move_to(new_channel)
 
-    return {"new_channel": new_channel, "mention": mention,"mention_name": mention_name}
+    return {"new_channel": new_channel, "mention": mention, "mention_name": mention_name}
 
 
 async def create_text(ctx):
@@ -235,7 +232,7 @@ async def check_in_role(ctx):
     """
     mention = ctx.message.role_mentions
     author_role = ctx.author.roles
-    if not mention:
+    if not mention and not ctx.message.mentions:
         return 2
     for i in mention:
         if i not in author_role:
