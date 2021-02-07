@@ -8,7 +8,6 @@ import importlib
 
 from dotenv import load_dotenv
 
-
 load_dotenv()
 os.getenv("OWNER")
 os.getenv("TOKEN")
@@ -16,7 +15,13 @@ os.getenv("TOKEN")
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename=f'../discord.log', encoding='utf-8', mode='a')
+for file in os.listdir():
+    if file == "discord.log":
+        if not os.path.exists('backup/log'):
+            os.makedirs('backup/log')
+        os.replace(file, f"""backup/log/{current_time()}.log""")
+        break
+handler = logging.FileHandler(filename=f'discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
@@ -53,8 +58,8 @@ async def load(ctx, extension):
         await ctx.message.add_reaction("🛑")
 
 
-for filename in os.listdir('cogs'):
+for filename in os.listdir('package/cogs'):
     if filename.endswith('.py') and filename != "__init__.py":
-        bot.load_extension(f'cogs.{filename[:-3]}')
+        bot.load_extension(f'package.cogs.{filename[:-3]}')
 
 bot.run(os.environ['TOKEN'])
