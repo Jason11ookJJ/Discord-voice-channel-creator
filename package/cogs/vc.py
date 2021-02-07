@@ -81,8 +81,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                                             """, color=0x178fff)
                 response_msg = await msg.channel.send(embed=embed_var)
 
+                db.save_text_channel(new_channel.id, j.get("new_channel").id)
                 db.save_voice_channel(new_channel.id, msg.channel.id, response_msg.id)
-
                 print(f"{current_time()} VC: a private channel is created (created: 1, deleted: 0)")
                 save(self, 1, 0)
         else:
