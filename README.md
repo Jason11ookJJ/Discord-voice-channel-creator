@@ -9,7 +9,7 @@ A discord bot that will create a temporary voice channel
 commands| description
 ---|---
 `vc create [?speakers] [?name]` | create a voice channel that everyone can hear
-`vc private [speaker/listener] [?name]`| create a private voice and text channel, no other user can enter tour channel except admin
+`vc private [speaker/listener] [?name]`| create a private voice and text channel, no other user can enter your channel except admin
 `vc text [?speaker] [?name]`| create a common voice channel with a text channel
 `vc change_log [?version]` | get recent change log
 `vc permission` | get required permission
