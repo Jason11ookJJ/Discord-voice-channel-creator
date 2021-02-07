@@ -44,7 +44,7 @@ def save_voice_channel(new_channel_id, msg_channel_id, response_msg_id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(save_voice_channel) ({e})''')
 
 
 def save_text_channel(voice_channel_id, text_channel_id):
@@ -56,7 +56,7 @@ def save_text_channel(voice_channel_id, text_channel_id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(save_text_channel) ({e})''')
 
 
 def delete_channel(before_channel_id):
@@ -67,7 +67,7 @@ def delete_channel(before_channel_id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(delete_channel) ({e})''')
 
 
 def stats_save(server_count, created, deleted):
@@ -81,7 +81,7 @@ def stats_save(server_count, created, deleted):
         print(
             f'''{current_time()} DB: saved to data.db (server count:{server_count} created: {created}, deleted: {deleted})''')
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(stats_save) ({e})''')
 
 
 def get_channel(before_channel_id):
@@ -99,10 +99,12 @@ def get_channel(before_channel_id):
                             WHERE vc.channel_id = (?)""",
                             [before_channel_id]).fetchall()
         conn.close()
-        data = dict(zip([c[0] for c in db.description], result[0]))
-        return data
+        if result:
+            return dict(zip([c[0] for c in db.description], result[0]))
+        else:
+            return
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(get_channel) ({e})''')
 
 
 def get_all_stats():
@@ -114,7 +116,7 @@ def get_all_stats():
         conn.close()
         return result
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(get_all_stats) ({e})''')
 
 
 def reset_db(self):
@@ -136,7 +138,7 @@ def save_error(ctx, error):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(save_error) ({e})''')
 
 
 def get_all_error():
@@ -151,7 +153,7 @@ def get_all_error():
             data.append(dict(zip([c[0] for c in db.description], i)))
         return data
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(get_all_error) ({e})''')
 
 
 def check_error(ctx, id):
@@ -162,4 +164,4 @@ def check_error(ctx, id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f'''{current_time()} Error: DB ({e})''')
+        print(f'''{current_time()} Error: DB(check_error) ({e})''')
