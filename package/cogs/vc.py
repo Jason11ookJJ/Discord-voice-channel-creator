@@ -86,7 +86,7 @@ class Vc(commands.Cog, name="Voice Channel"):
         elif check == 2:
             embed_var = discord.Embed(title="", description=f"""
                                                 {ctx.author.mention}
-                                                You need to ping a user to create a private channel, use "vc create" instead
+                                                You need to ping a user to create a private channel, use "vc create" instead 
                                                 """, color=0xff0f0f)
             await ctx.channel.send(embed=embed_var)
 
@@ -157,24 +157,24 @@ async def create_voice(ctx):
     msg = ctx.message
     mention = msg.role_mentions + msg.mentions
     mention_list = []
+    channel_name = await get_channel_name(msg)
+    if channel_name == "":
+        channel_name = "created by Vcc"
+
+    if msg.channel.category is None:  # not a channel in category
+        new_channel = await msg.channel.guild.create_voice_channel(channel_name)
+    else:  # channel in category
+        new_channel = await msg.channel.category.create_voice_channel(channel_name)
 
     if mention:  # @role
-        # create channel
-        channel_name = await get_channel_name(msg)
-        new_channel = await msg.channel.category.create_voice_channel(channel_name)
-
-        # setting permission
-        for i in mention:
-            await new_channel.set_permissions(i, speak=True)
-            mention_list.append(i.mention)
-        mention_name = ", ".join(mention_list)
-
         await new_channel.set_permissions(ctx.guild.roles[0], speak=False)
-    else:  # only text
-        channel_name = await get_channel_name(msg)
-        if channel_name == "":
-            channel_name = "created by Vcc"
-        new_channel = await msg.channel.category.create_voice_channel(channel_name)
+
+    # setting permission
+    for i in mention:
+        await new_channel.set_permissions(i, speak=True)
+        mention_list.append(i.mention)
+    mention_name = ", ".join(mention_list)
+    if not mention_name:
         mention_name = "everyone"
 
     mention.append(msg.author)
@@ -187,22 +187,20 @@ async def create_voice(ctx):
 async def create_text(ctx):
     msg = ctx.message
     mention = msg.role_mentions + msg.mentions
+    channel_name = await get_channel_name(msg)
+    if channel_name == "":
+        channel_name = "created by Vcc"
 
-    if mention:  # @role
-        # create channel
-        channel_name = await get_channel_name(msg)
+    if msg.channel.category is None:
+        new_channel = await msg.channel.guild.create_text_channel(channel_name)
+    else:
         new_channel = await msg.channel.category.create_text_channel(channel_name)
 
-        # setting permission
-        for i in mention:
-            await new_channel.set_permissions(i, send_messages=True)
+    # setting permission
+    for i in mention:
+        await new_channel.set_permissions(i, send_messages=True)
 
-        await new_channel.set_permissions(ctx.guild.roles[0], send_messages=False)
-    else:  # only text
-        channel_name = await get_channel_name(msg)
-        if channel_name == "":
-            channel_name = "created by Vcc"
-        new_channel = await msg.channel.category.create_text_channel(channel_name)
+    await new_channel.set_permissions(ctx.guild.roles[0], send_messages=False)
 
     return {"new_channel": new_channel}
 
