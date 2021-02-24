@@ -16,20 +16,19 @@ class Error(commands.Cog, name="Voice Channel"):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         await ctx.message.add_reaction("🛑")
-        if hasattr(error, 'original'):
-            if hasattr(error, 'code'):
-                if error.original.code == 50035:
-                    embed_var = discord.Embed(title="Command error", description=f"""
-                                        Maximum number of channels in category reached (50)
-                                        """, color=0xff0f0f)
-                    await ctx.send(embed=embed_var)
-                    return
-                elif error.original.code == 30013:
-                    embed_var = discord.Embed(title="Command error", description=f"""
-                                        Maximum number of guild channels reached (500)
-                                        """, color=0xff0f0f)
-                    await ctx.send(embed=embed_var)
-                    return
+        if hasattr(error, 'original') and hasattr(error.original, 'code'):
+            if error.original.code == 50035:
+                embed_var = discord.Embed(title="Command error", description=f"""
+                                    Maximum number of channels in category reached (50)
+                                    """, color=0xff0f0f)
+                await ctx.send(embed=embed_var)
+                return
+            elif error.original.code == 30013:
+                embed_var = discord.Embed(title="Command error", description=f"""
+                                    Maximum number of guild channels reached (500)
+                                    """, color=0xff0f0f)
+                await ctx.send(embed=embed_var)
+                return
         if isinstance(error, BotMissingPermissions):  # checking which type of error it is
             embed_var = discord.Embed(title="Command error", description=f"""
                     {error} It seems that I don't have enough permission to do this, please sent a message to the 
