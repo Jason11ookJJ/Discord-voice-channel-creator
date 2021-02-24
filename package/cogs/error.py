@@ -34,6 +34,11 @@ class Error(commands.Cog, name="Voice Channel"):
                                 Maximum number of channels in category reached (50)
                                 """, color=0xff0f0f)
             await ctx.send(embed=embed_var)
+        elif error.original.code == 30013:
+            embed_var = discord.Embed(title="Command error", description=f"""
+                                Maximum number of guild channels reached (500)
+                                """, color=0xff0f0f)
+            await ctx.send(embed=embed_var)
         else:
             embed_var = discord.Embed(title="Unknown error", description=f""" An unexpected error 
             occurred, please report this issue on [GitHub](
