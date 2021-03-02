@@ -24,7 +24,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def create(self, ctx):
-        if await check_in_role(ctx) == 0 or 2:
+        if check_in_role(ctx) == (0 or 2):
             i = await create_voice(ctx)
             if i:
                 new_channel = i.get("new_channel")
@@ -53,8 +53,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def private(self, ctx):
-        check = await check_in_role(ctx)
-        if check == 0:
+        if check_in_role(ctx) == 0:
             i = await create_voice(ctx)
             if i:
                 j = await create_text(ctx)
@@ -100,8 +99,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def text(self, ctx):
-        check = await check_in_role(ctx)
-        if check == 0 or 2:
+        if check_in_role(ctx) == (0 or 2):
             i = await create_voice(ctx)
             if i:
                 q = await create_text(ctx)
