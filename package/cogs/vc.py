@@ -68,6 +68,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                         await text_channel.set_permissions(q, read_messages=True)
                     await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
                     await text_channel.set_permissions(ctx.guild.roles[0], read_messages=False)
+                    await new_channel.set_permissions(self.bot.users[0], connect=True)
+                    await text_channel.set_permissions(self.bot.users[0], read_messages=True)
 
                     embed_var = discord.Embed(title="", description=f"""
                                                 Vcc private
