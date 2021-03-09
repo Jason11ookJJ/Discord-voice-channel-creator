@@ -24,7 +24,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def create(self, ctx):
-        if await check_in_role(ctx) == (0 or 2):
+        check = await check_in_role(ctx)
+        if check == 2 or check == 0:
             i = await create_voice(ctx)
             if i:
                 new_channel = i.get("new_channel")
@@ -102,7 +103,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def text(self, ctx):
-        if await check_in_role(ctx) == (0 or 2):
+        check = await check_in_role(ctx)
+        if check == 2 or check == 0:
             i = await create_voice(ctx)
             if i:
                 q = await create_text(ctx)
@@ -231,7 +233,7 @@ async def check_in_role(ctx):
     """
     mention = ctx.message.role_mentions
     author_role = ctx.author.roles
-    if not mention and not ctx.message.mentions:
+    if not mention and ctx.message.mentions == []:
         return 2
     for i in mention:
         if i not in author_role:

@@ -8,6 +8,9 @@
 /package/cogs/__pycache__
 /package/__pycache__\
 /venv
-
+/.env
+/discord.log
+/data.db
+/data.db-journal
 
 
