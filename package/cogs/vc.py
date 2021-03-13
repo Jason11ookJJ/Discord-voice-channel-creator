@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from package.function import current_time
+from package.function import current_time, time_zone_time
 from package.data import databaseDeo as db
 
 
@@ -35,7 +35,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                         Speaker: {i.get("mention_name")}
                                         Creator: {ctx.author.mention}
         
-                                        Started: {current_time()}
+                                        Started: {time_zone_time(ctx)}
                                         """, color=0x0ae0fc)
                 response_msg = await ctx.channel.send(embed=embed_var)
 
@@ -78,7 +78,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                                 Speaker + Listener: {i.get("mention_name")}
                                                 Creator: {ctx.author.mention}
             
-                                                Started: {current_time()}
+                                                Started: {time_zone_time(ctx)}
                                                 """, color=0x178fff)
                     response_msg = await ctx.channel.send(embed=embed_var)
 
@@ -106,22 +106,21 @@ class Vc(commands.Cog, name="Voice Channel"):
         check = await check_in_role(ctx)
         if check == 2 or check == 0:
             i = await create_voice(ctx)
-            if i:
-                q = await create_text(ctx)
-                if q:
-                    voice_channel = i.get("new_channel")
-                    embed_var = discord.Embed(title="", description=f"""Vcc text and voice
-                                                                        Name: {str(voice_channel)}
-                                                                        Speaker: {i.get("mention_name")}
-                                                                        Creator: {ctx.author.mention}
-                                            
-                                                                        Started: {current_time()}
-                                                                        """, color=0x0ae0fc)
-                    response_msg = await ctx.channel.send(embed=embed_var)
-                    db.save_voice_channel(voice_channel.id, ctx.channel.id, response_msg.id)
-                    db.save_text_channel(voice_channel.id, q.get("new_channel").id)
-                    print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
-                    save(self, 1, 0)
+            q = await create_text(ctx)
+            if i and q:
+                voice_channel = i.get("new_channel")
+                embed_var = discord.Embed(title="", description=f"""Vcc text and voice
+                                                                    Name: {str(voice_channel)}
+                                                                    Speaker: {i.get("mention_name")}
+                                                                    Creator: {ctx.author.mention}
+                                        
+                                                                    Started: {time_zone_time(ctx)}
+                                                                    """, color=0x0ae0fc)
+                response_msg = await ctx.channel.send(embed=embed_var)
+                db.save_voice_channel(voice_channel.id, ctx.channel.id, response_msg.id)
+                db.save_text_channel(voice_channel.id, q.get("new_channel").id)
+                print(f"{current_time()} VC: a channel is created (created: 1, deleted: 0)")
+                save(self, 1, 0)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, client, before, after):
@@ -146,7 +145,7 @@ class Vc(commands.Cog, name="Voice Channel"):
 
                         embed_var = discord.Embed(title="", description=f"""
                         (deleted) {description} 
-                        Ended: {current_time()}
+                        Ended: {time_zone_time(before.channel)}
                         """, color=0x129eb0)
                         await response_msg.edit(embed=embed_var)
 
