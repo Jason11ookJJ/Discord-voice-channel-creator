@@ -1,15 +1,16 @@
-/.env
 /.vscode
 /bot-env
-/data.db
-/data.db-journal
 /docker
 /icon
-/discord.log
 /backup
 /__pycache__
 /.idea
 /package/cogs/__pycache__
-/package/data/__pycache__
-/.obsidian
+/package/__pycache__\
+/venv
+/.env
+/discord.log
+/data.db
+/data.db-journal
+
 

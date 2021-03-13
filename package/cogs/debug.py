@@ -8,7 +8,7 @@ class Debug(commands.Cog):
     # event
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Owner cog is ready")
+        print("Debug cog is ready")
 
     @commands.command(brief='delete all channel in this category', description='delete all channel in this category')
     @commands.is_owner()

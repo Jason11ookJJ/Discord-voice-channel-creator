@@ -24,7 +24,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   view_channel=True,
                                   embed_links=True)
     async def create(self, ctx):
-        if await check_in_role(ctx) == 0 or 2:
+        check = await check_in_role(ctx)
+        if check == 2 or check == 0:
             i = await create_voice(ctx)
             if i:
                 new_channel = i.get("new_channel")
@@ -68,6 +69,8 @@ class Vc(commands.Cog, name="Voice Channel"):
                         await text_channel.set_permissions(q, read_messages=True)
                     await new_channel.set_permissions(ctx.guild.roles[0], connect=False)
                     await text_channel.set_permissions(ctx.guild.roles[0], read_messages=False)
+                    await new_channel.set_permissions(self.bot.users[0], connect=True)
+                    await text_channel.set_permissions(self.bot.users[0], read_messages=True)
 
                     embed_var = discord.Embed(title="", description=f"""
                                                 Vcc private
@@ -101,7 +104,7 @@ class Vc(commands.Cog, name="Voice Channel"):
                                   embed_links=True)
     async def text(self, ctx):
         check = await check_in_role(ctx)
-        if check == 0 or 2:
+        if check == 2 or check == 0:
             i = await create_voice(ctx)
             if i:
                 q = await create_text(ctx)
@@ -230,7 +233,7 @@ async def check_in_role(ctx):
     """
     mention = ctx.message.role_mentions
     author_role = ctx.author.roles
-    if not mention and not ctx.message.mentions:
+    if not mention and ctx.message.mentions == []:
         return 2
     for i in mention:
         if i not in author_role:
