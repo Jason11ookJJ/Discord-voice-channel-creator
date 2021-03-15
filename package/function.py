@@ -34,14 +34,14 @@ def time_zone(var):
         'london': 'Europe/London',
         'russia': 'Europe/Moscow',
         'singapore': 'Asia/Singapore',
-        'southafrica': 'SAST',
-        'south_korea': 'GMT+9',
+        'southafrica': 'Africa/Johannesburg',
+        'south_korea': 'Asia/Seoul',
         'sydney': 'Australia/Sydney',
-        'us_central': 'UTC-6',
-        'us_east': 'EST',
-        'us_south': 'EST',
-        'us_west': 'PT',
+        'us_central': 'US/Central',
+        'us_east': 'US/East-Indiana',
+        'us_south': 'US/Mountain',
+        'us_west': 'US/Pacific',
         'vip_amsterdam': 'Europe/Amsterdam',
-        'vip_us_east': 'EST',
-        'vip_us_west': 'PT'
+        'vip_us_east': 'US/East-Indiana',
+        'vip_us_west': 'US/Pacific'
     }.get(var, 'UTC')
